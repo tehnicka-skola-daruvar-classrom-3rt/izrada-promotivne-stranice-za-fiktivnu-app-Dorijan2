@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animirane Forme</title>
+    <style>
+        /* ============================================
+           CSS RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE
+           ============================================ */
+        body {
+            background: linear-gradient(135deg, #e8f4f8, #f0f4f8, #e8e8f8);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+        }
+
+        /* ============================================
+           LOGIN KARTICA
+           ============================================ */
+        .login-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            width: 100%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .login-card h2 {
+            text-align: center;
+            color: #333;
+            margin-bottom: 30px;
+        }
+
+        /* ============================================
+           INPUT GRUPA S FLOATING LABEL EFEKTOM
+           Label "pluta" iznad inputa kad je fokusiran
+           ============================================ */
+        .input-group {
+            position: relative;            /* Za apsolutno pozicionirani label */
+            margin-bottom: 30px;
+        }
+
+        .input-group input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 10px;
+            font-size: 1rem;
+            outline: none;                 /* Uklanja default plavi obrub na fokus */
+            transition: all 0.3s ease;
+            background: transparent;       /* Prozirna pozadina da se vidi label iza */
+        }
+
+        /* Label je apsolutno pozicioniran UNUTAR inputa */
+        .input-group label {
+            position: absolute;
+            left: 15px;
+            top: 50%;                      /* Vertikalno centriran */
+            transform: translateY(-50%);   /* Kompenzira za vlastitu visinu */
+            color: #999;
+            font-size: 1rem;
+            pointer-events: none;          /* VAŽNO! Label ne blokira klikove na input */
+            transition: all 0.3s ease;
+            background: white;             /* Bijela pozadina "prekriva" border inputa */
+            padding: 0 5px;
+        }
+
+        /* ============================================
+           FOCUS I VALID STATE - Label "pluta" gore
+
+           :focus = input je trenutno aktivan (kursor u njemu)
+           :valid = input ima validnu vrijednost (nije prazan za required)
+           ============================================ */
+        .input-group input:focus,
+        .input-group input:valid {
+            border-color: #1a73e8;         /* Plavi obrub */
+        }
+
+        /* + selektor: label ODMAH NAKON inputa */
+        .input-group input:focus + label,
+        .input-group input:valid + label {
+            top: 0;                        /* Pomiče se na vrh inputa */
+            font-size: 0.8rem;             /* Smanjuje se */
+            color: #1a73e8;                /* Mijenja boju */
+            /*
+               Label "pluta" gore zahvaljujući promjeni top vrijednosti.
+               Transition osigurava glatki prijelaz.
+            */
+        }
+
+        /* ============================================
+           ANIMIRANA LINIJA ISPOD INPUTA
+           Širi se od sredine prema rubovima na fokus
+           ============================================ */
+        .input-group::after {
+            content: '';
+            position: absolute;
+            bottom: 0;                     /* Na dnu input-group */
+            left: 50%;                     /* Počinje u sredini */
+            width: 0;                      /* Nevidljiva na početku */
+            height: 2px;
+            background: linear-gradient(90deg, #1a73e8, #1557b0);
+            transition: all 0.3s ease;
+        }
+
+        /* :focus-within = aktivira se kad BILO KOJI child ima fokus */
+        .input-group:focus-within::after {
+            left: 0;                       /* Pomiče se na lijevi rub */
+            width: 100%;                   /* Širi se na punu širinu */
+            /*
+               Kombinacija left: 50% -> 0 i width: 0 -> 100%
+               stvara efekt "širenja od sredine".
+            */
+        }
+
+        /* ============================================
+           ANIMIRANI SUBMIT GUMB
+           Lift efekt + ripple efekt na klik
+           ============================================ */
+        .submit-btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: linear-gradient(90deg, #1a73e8, #1557b0);
+            color: white;
+            font-size: 1.1rem;
+            font-weight: bold;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;              /* Za ripple efekt */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Lift efekt na hover */
+        .submit-btn:hover {
+            transform: translateY(-3px);   /* Podigne se */
+            box-shadow: 0 10px 30px rgba(26, 115, 232, 0.4);  /* Sjena */
+        }
+
+        /* Vraća se dolje na klik */
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        /* ============================================
+           RIPPLE EFEKT - Krug koji se širi na klik
+           ============================================ */
+        .submit-btn::after {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255,255,255,0.3);  /* Polu-prozirna bijela */
+            border-radius: 50%;
+            transform: translate(-50%, -50%);   /* Centrira */
+            transition: width 0.6s ease, height 0.6s ease;
+        }
+
+        /* Na klik (:active), krug se brzo proširi */
+        .submit-btn:active::after {
+            width: 300px;
+            height: 300px;
+            /*
+               Krug se proširi od 0 do 300px.
+               overflow: hidden na gumbu skriva dijelove izvan gumba.
+               Rezultat: "val" koji se širi od mjesta klika.
+            */
+        }
+
+        /* ============================================
+           CUSTOM CHECKBOX - Zamjena za default checkbox
+           ============================================ */
+        .checkbox-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 25px;
+        }
+
+        /* Skrivamo originalni checkbox */
+        .checkbox-group input[type="checkbox"] {
+            display: none;
+        }
+
+        /* Naš custom checkbox (span element) */
+        .checkbox-group .checkmark {
+            width: 24px;
+            height: 24px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        /* Kad je checkbox označen, .checkmark dobiva stil */
+        .checkbox-group input:checked + .checkmark {
+            background: linear-gradient(90deg, #1a73e8, #1557b0);
+            border-color: #1a73e8;
+            animation: checkPop 0.3s ease;  /* "Pop" efekt */
+        }
+
+        /* ============================================
+           @KEYFRAMES CHECKPOP - "Skok" na označavanje
+           ============================================ */
+        @keyframes checkPop {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }   /* Poveća se */
+            100% { transform: scale(1); }    /* Vraća se */
+        }
+
+        /* Kvačica unutar checkboxa */
+        .checkbox-group .checkmark::after {
+            content: '✓';
+            color: white;
+            font-size: 14px;
+            opacity: 0;                    /* Nevidljiva na početku */
+            transform: scale(0);           /* Smanjena */
+            transition: all 0.2s ease;
+        }
+
+        /* Kad je označen, kvačica se pojavi */
+        .checkbox-group input:checked + .checkmark::after {
+            opacity: 1;
+            transform: scale(1);           /* Normalna veličina */
+        }
+
+        .checkbox-group label {
+            color: #666;
+            cursor: pointer;
+        }
+
+        /* ============================================
+           ERROR STATE - Tresenje na grešku
+           Dodaj klasu "error" na .input-group za ovaj efekt
+           ============================================ */
+        .input-group.error input {
+            border-color: #ff416c;         /* Crveni obrub */
+            animation: shake 0.5s ease;    /* Tresenje */
+        }
+
+        .input-group.error label {
+            color: #ff416c;                /* Crveni label */
+        }
+
+        /* ============================================
+           @KEYFRAMES SHAKE - Tresenje lijevo-desno
+           Ista animacija kao na gaming gumbu
+           ============================================ */
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
+            20%, 40%, 60%, 80% { transform: translateX(5px); }
+        }
+
+        /* ============================================
+           SUCCESS STATE - Zelena kvačica
+           Dodaj klasu "success" na .input-group
+           ============================================ */
+        .input-group.success::before {
+            content: '✓';
+            position: absolute;
+            right: 15px;                   /* Na desnoj strani inputa */
+            top: 50%;
+            transform: translateY(-50%);
+            color: #27ca40;                /* Zelena */
+            font-size: 1.2rem;
+            animation: popIn 0.3s ease;
+        }
+
+        /* ============================================
+           @KEYFRAMES POPIN - Pojavljivanje s "pop" efektom
+           ============================================ */
+        @keyframes popIn {
+            0% { transform: translateY(-50%) scale(0); }
+            50% { transform: translateY(-50%) scale(1.3); }  /* Veće od normalne */
+            100% { transform: translateY(-50%) scale(1); }   /* Normalna veličina */
+            /*
+               VAŽNO: translateY(-50%) mora biti u svakom koraku
+               inače se pozicija resetira!
+            */
+        }
+
+        /* ============================================
+           ANIMIRANI LINK - Podvlaka se širi od sredine
+           ============================================ */
+        .forgot-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #1a73e8;
+            text-decoration: none;         /* Uklanja default podvlaku */
+            position: relative;
+        }
+
+        /* Custom podvlaka - slično kao linija ispod inputa */
+        .forgot-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 50%;                     /* Počinje u sredini */
+            width: 0;
+            height: 2px;
+            background: #1a73e8;
+            transition: all 0.3s ease;
+        }
+
+        /* Na hover, podvlaka se proširi */
+        .forgot-link:hover::after {
+            left: 0;
+            width: 100%;
+        }
+
+        /* ============================================
+           DEMO NAPOMENA
+           ============================================ */
+        .demo-note {
+            text-align: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f0f0f0;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            color: #666;
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 480px) {
+            body {
+                padding: 20px;
+            }
+            .login-card {
+                padding: 25px;
+            }
+            .login-card h2 {
+                font-size: 1.3rem;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .input-group input,
+            .input-group label,
+            .input-group::after,
+            .submit-btn,
+            .submit-btn::after,
+            .checkbox-group .checkmark,
+            .checkbox-group .checkmark::after,
+            .forgot-link::after,
+            .input-group.error input {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="login-card">
+        <h2>&#128274; Prijava</h2>  <!-- 🔒 -->
+
+        <form>
+            <!--
+                SUCCESS STATE primjer:
+                Klasa "success" dodaje zelenu kvačicu.
+                value="ucenik@skola.hr" čini input :valid
+            -->
+            <div class="input-group success">
+                <input type="email" id="email" required value="ucenik@skola.hr">
+                <label for="email">Email adresa</label>
+            </div>
+
+            <!--
+                FLOATING LABEL:
+                - required atribut omogućuje :valid selektor
+                - Kad input ima tekst, :valid aktivira floating label
+                - Kad je prazan, label ostaje u sredini
+            -->
+            <div class="input-group">
+                <input type="password" id="password" required>
+                <label for="password">Lozinka</label>
+            </div>
+
+            <!--
+                CUSTOM CHECKBOX:
+                - Originalni checkbox je skriven (display: none)
+                - Klik na label ili .checkmark aktivira checkbox
+                - CSS :checked stilizira .checkmark element
+            -->
+            <div class="checkbox-group">
+                <input type="checkbox" id="remember">
+                <span class="checkmark"></span>
+                <label for="remember">Zapamti me</label>
+            </div>
+
+            <!--
+                SUBMIT GUMB:
+                - Hover = lift efekt (translateY + box-shadow)
+                - Klik = ripple efekt (::after se proširi)
+            -->
+            <button type="button" class="submit-btn">Prijavi se</button>
+
+            <!--
+                ANIMIRANI LINK:
+                - Podvlaka se širi od sredine prema rubovima na hover
+            -->
+            <a href="#" class="forgot-link">Zaboravili ste lozinku?</a>
+        </form>
+
+        <div class="demo-note">
+            <strong>Isprobaj:</strong> Klikni na input polja, checkbox, gumb.
+            Dodaj klasu "error" na input-group za shake efekt!
+        </div>
+    </div>
+</body>
+</html>

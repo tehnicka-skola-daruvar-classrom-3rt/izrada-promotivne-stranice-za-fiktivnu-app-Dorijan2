@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hover Kartice</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE - SVIJETLA TEMA
+           ============================================ */
+        body {
+            background: linear-gradient(135deg, #e8f0fe, #f3e8ff);  /* Svijetli gradijent */
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;               /* Kartice prelaze u novi red na manjim ekranima */
+            justify-content: center;
+            align-items: center;
+            gap: 40px;                     /* Razmak između kartica */
+            padding: 40px;
+            font-family: Arial, sans-serif;
+        }
+
+        /* ============================================
+           KARTICA 1 - LIFT (PODIZANJE) EFEKT
+           Najjednostavniji hover efekt - kartica se "podigne"
+           ============================================ */
+        .card {
+            width: 280px;
+            height: 350px;
+            background: white;
+            border-radius: 20px;
+            overflow: hidden;              /* Skriva sve što izlazi izvan kartice */
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+            /* TRANSITION - Ključno za glatke hover efekte!
+               all = primjenjuje se na SVA svojstva koja se promijene
+               0.4s = trajanje prijelaza
+               ease = počinje sporo, ubrza, pa uspori na kraju */
+            transition: all 0.4s ease;
+            cursor: pointer;
+        }
+
+        /* HOVER STATE - Što se događa kad miš prijeđe preko */
+        .card:hover {
+            /* translateY(-20px) pomiče karticu 20px GORE (negativno = gore)
+               Stvara iluziju da se kartica "podigla" */
+            transform: translateY(-20px);
+
+            /* box-shadow dodaje sjenu koja pojačava 3D efekt
+               0 30px 60px = bez horizontalnog pomaka, 30px vertikalno, 60px blur
+               Veća sjena = kartica izgleda kao da je više podignuta */
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .card-img {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);  /* Plavi gradijent */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 4rem;               /* Veliki emoji */
+        }
+
+        .card-content {
+            padding: 20px;
+        }
+
+        .card-content h3 {
+            margin: 0 0 10px 0;
+            color: #333;
+        }
+
+        .card-content p {
+            color: #666;
+            font-size: 0.9rem;
+            line-height: 1.5;              /* Razmak između redaka teksta */
+        }
+
+        /* ============================================
+           KARTICA 2 - OVERLAY (PREKRIVANJE) EFEKT
+           Pozadina se zoomira, tekst se pojavi odozdo
+           ============================================ */
+        .card-overlay {
+            width: 280px;
+            height: 350px;
+            border-radius: 20px;
+            overflow: hidden;
+            position: relative;            /* VAŽNO za apsolutno pozicionirani content */
+            cursor: pointer;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .card-overlay-bg {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(45deg, #0d9488, #14b8a6);  /* Zeleni gradijent */
+            transition: transform 0.5s ease;  /* Glatki zoom */
+        }
+
+        /* Zoom efekt na pozadini kad hover-amo karticu */
+        .card-overlay:hover .card-overlay-bg {
+            transform: scale(1.1);         /* Povećaj za 10% - "zoom in" efekt */
+        }
+
+        /* Content koji se pojavljuje */
+        .card-overlay-content {
+            position: absolute;            /* Pozicioniramo preko pozadine */
+            bottom: 0;                     /* Na dnu kartice */
+            left: 0;
+            right: 0;
+            padding: 30px 20px;
+
+            /* Gradijent od prozirnog do tamnog - stvara "fade" efekt */
+            background: linear-gradient(transparent, rgba(0,0,0,0.8));
+            color: white;
+
+            /* Početna pozicija - 60px ispod (izvan kartice, skriveno) */
+            transform: translateY(60px);
+            transition: transform 0.4s ease;
+        }
+
+        /* Na hover, content se pomiče na normalnu poziciju */
+        .card-overlay:hover .card-overlay-content {
+            transform: translateY(0);      /* Vraća se na vidljivu poziciju */
+        }
+
+        .card-overlay-content h3 {
+            margin: 0 0 10px 0;
+        }
+
+        .card-overlay-content p {
+            opacity: 0;                    /* Tekst je nevidljiv na početku */
+
+            /* transition s DELAY-om!
+               0.4s = trajanje
+               ease = timing funkcija
+               0.1s = DELAY - čeka 0.1s prije nego počne
+               To znači da se tekst pojavi NAKON što content dođe na poziciju */
+            transition: opacity 0.4s ease 0.1s;
+        }
+
+        .card-overlay:hover .card-overlay-content p {
+            opacity: 1;                    /* Tekst postaje vidljiv */
+        }
+
+        /* ============================================
+           KARTICA 3 - 3D FLIP (OKRETANJE)
+           Kartica se okreće za 180° i pokazuje stražnju stranu
+           ============================================ */
+        .card-flip {
+            width: 280px;
+            height: 350px;
+
+            /* PERSPECTIVE - Ključno za 3D efekt!
+               Definira "udaljenost" gledatelja od elementa
+               Manji broj = izraženiji 3D efekt
+               1000px je umjerena vrijednost */
+            -webkit-perspective: 1000px;  /* Za Safari i starije preglednike */
+            perspective: 1000px;
+            cursor: pointer;
+        }
+
+        .card-flip-inner {
+            width: 100%;
+            height: 100%;
+            position: relative;
+
+            /* TRANSFORM-STYLE: PRESERVE-3D
+               Omogućuje da child elementi (prednja i stražnja strana)
+               budu u 3D prostoru, ne samo ravni */
+            -webkit-transform-style: preserve-3d;  /* Za Safari */
+            transform-style: preserve-3d;
+
+            transition: transform 0.8s ease;  /* Glatko okretanje */
+        }
+
+        /* Na hover, unutarnji dio se okreće za 180° oko Y osi (horizontalno) */
+        .card-flip:hover .card-flip-inner {
+            transform: rotateY(180deg);
+        }
+
+        /* Zajednički stilovi za prednju i stražnju stranu */
+        .card-flip-front, .card-flip-back {
+            position: absolute;            /* Obje strane su na istoj poziciji */
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+
+            /* BACKFACE-VISIBILITY: HIDDEN
+               KRITIČNO! Skriva stranu kada je okrenuta od gledatelja.
+               Bez ovoga, vidjeli bismo obje strane istovremeno. */
+            -webkit-backface-visibility: hidden;  /* Za Safari */
+            backface-visibility: hidden;
+
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            color: white;
+        }
+
+        .card-flip-front {
+            background: linear-gradient(45deg, #7c3aed, #8b5cf6);  /* Ljubičasti gradijent */
+            /* Prednja strana je na normalnoj poziciji (nije rotirana) */
+        }
+
+        .card-flip-back {
+            background: linear-gradient(45deg, #8b5cf6, #7c3aed);  /* Obrnuti gradijent */
+
+            /* Stražnja strana je VEĆ rotirana za 180°
+               Kad se .card-flip-inner rotira za 180°, stražnja strana
+               završi na 360° (= 0°), što znači da je okrenuta prema nama */
+            transform: rotateY(180deg);
+
+            padding: 30px;
+            text-align: center;
+        }
+
+        .card-flip-front h3 {
+            font-size: 2rem;
+            margin-top: 20px;
+        }
+
+        .card-flip-front span {
+            font-size: 5rem;               /* Veliki emoji */
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 900px) {
+            body {
+                gap: 30px;
+            }
+        }
+        @media (max-width: 600px) {
+            body {
+                padding: 20px;
+                gap: 20px;
+            }
+            .card, .card-overlay, .card-flip {
+                width: 100%;               /* Pune širine na mobilnim */
+                max-width: 320px;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .card,
+            .card-overlay-bg,
+            .card-overlay-content,
+            .card-overlay-content p,
+            .card-flip-inner {
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Kartica 1 - Jednostavan lift efekt -->
+    <div class="card">
+        <div class="card-img">&#127918;</div>  <!-- 🎮 Gaming emoji -->
+        <div class="card-content">
+            <h3>Gaming Zone</h3>
+            <p>Prijeđi mišem preko kartice da vidiš lift efekt. Koristi se na većini modernih stranica.</p>
+        </div>
+    </div>
+
+    <!-- Kartica 2 - Overlay s zoom efektom -->
+    <div class="card-overlay">
+        <div class="card-overlay-bg"></div>
+        <div class="card-overlay-content">
+            <h3>Reveal Efekt</h3>
+            <p>Tekst se pojavi na hover. Pozadina se zoomira. Super za portfolije!</p>
+        </div>
+    </div>
+
+    <!-- Kartica 3 - 3D Flip kartica -->
+    <div class="card-flip">
+        <div class="card-flip-inner">
+            <!-- Prednja strana - vidljiva na početku -->
+            <div class="card-flip-front">
+                <span>&#129412;</span>  <!-- 🦄 Jednorog emoji -->
+                <h3>Okreni me!</h3>
+            </div>
+            <!-- Stražnja strana - vidljiva nakon okretanja -->
+            <div class="card-flip-back">
+                <h3>3D Flip!</h3>
+                <p>Ovo je stražnja strana kartice. Koristi perspective i transform-style: preserve-3d</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

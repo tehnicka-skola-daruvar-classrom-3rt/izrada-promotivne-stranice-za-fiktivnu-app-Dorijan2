@@ -1,0 +1,997 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Animacije - Cheatsheet</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f5f7fa;
+            color: #1e293b;
+            line-height: 1.6;
+        }
+
+        /* HEADER */
+        header {
+            background: linear-gradient(135deg, #1a73e8, #1557b0);
+            padding: 40px;
+            text-align: center;
+            color: white;
+        }
+
+        header h1 {
+            font-size: 2.5rem;
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        header p {
+            opacity: 0.9;
+            font-size: 1.1rem;
+            color: white;
+        }
+
+        /* MAIN CONTAINER */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        /* SEKCIJE */
+        .section {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border-left: 5px solid #1a73e8;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .section h2 {
+            color: #1a73e8;
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section h3 {
+            color: #d93025;
+            font-size: 1.2rem;
+            margin: 25px 0 15px 0;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        /* CODE BLOKOVI */
+        .code-block {
+            background: #1e293b;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 15px 0;
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block::before {
+            content: 'CSS';
+            position: absolute;
+            top: 10px;
+            right: 15px;
+            background: #1a73e8;
+            color: white;
+            padding: 2px 10px;
+            border-radius: 5px;
+            font-size: 0.75rem;
+        }
+
+        .code-block code {
+            font-family: 'Courier New', monospace;
+            font-size: 0.95rem;
+            color: #a5f3a6;
+            white-space: pre;
+        }
+
+        .code-block .comment {
+            color: #94a3b8;
+        }
+
+        .code-block .property {
+            color: #7dd3fc;
+        }
+
+        .code-block .value {
+            color: #f9a8d4;
+        }
+
+        .code-block .selector {
+            color: #fde047;
+        }
+
+        /* TABLICE */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        th {
+            background: #f1f5f9;
+            color: #1a73e8;
+            font-weight: bold;
+        }
+
+        tr:hover {
+            background: rgba(26, 115, 232, 0.05);
+        }
+
+        td code {
+            background: #1e293b;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: #a5f3a6;
+            font-size: 0.9rem;
+        }
+
+        /* DEMO BOXES */
+        .demo-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .demo-box {
+            background: #f1f5f9;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            min-width: 150px;
+            flex: 1;
+            border: 1px solid #e2e8f0;
+        }
+
+        .demo-box p {
+            margin-top: 15px;
+            font-size: 0.85rem;
+            color: #64748b;
+        }
+
+        .demo-box code {
+            display: block;
+            margin-top: 10px;
+            font-size: 0.75rem;
+            color: #1a73e8;
+        }
+
+        /* ANIMIRANI PRIMJERI */
+        .box {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(45deg, #1a73e8, #1557b0);
+            border-radius: 10px;
+            margin: 0 auto;
+        }
+
+        /* Timing funkcije demo */
+        .ease { animation: moveRight 2s ease infinite alternate; }
+        .ease-in { animation: moveRight 2s ease-in infinite alternate; }
+        .ease-out { animation: moveRight 2s ease-out infinite alternate; }
+        .ease-in-out { animation: moveRight 2s ease-in-out infinite alternate; }
+        .linear { animation: moveRight 2s linear infinite alternate; }
+
+        @keyframes moveRight {
+            from { transform: translateX(-30px); }
+            to { transform: translateX(30px); }
+        }
+
+        /* GRID ZA DVIJE KOLONE */
+        .two-column {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+        }
+
+        /* TIPS */
+        .tip {
+            background: #dcfce7;
+            border-left: 4px solid #16a34a;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .tip strong {
+            color: #16a34a;
+        }
+
+        .warning {
+            background: #fee2e2;
+            border-left: 4px solid #dc2626;
+            padding: 15px 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+
+        .warning strong {
+            color: #dc2626;
+        }
+
+        /* PRINT STYLES */
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .section {
+                background: #f5f5f5;
+                border-color: #1a73e8;
+            }
+            .code-block {
+                background: #f0f0f0;
+            }
+            .code-block code {
+                color: #333;
+            }
+            header {
+                background: #1a73e8;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+        }
+
+        /* NAV */
+        .nav {
+            background: white;
+            padding: 15px 40px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+            justify-content: center;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+        }
+
+        .nav a {
+            color: #64748b;
+            text-decoration: none;
+            padding: 5px 15px;
+            border-radius: 20px;
+            transition: all 0.3s;
+            font-size: 0.9rem;
+        }
+
+        .nav a:hover {
+            background: #1a73e8;
+            color: white;
+        }
+
+        /* VISUAL EXAMPLES */
+        .visual-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .visual-item {
+            background: #f1f5f9;
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            border: 1px solid #e2e8f0;
+        }
+
+        .visual-item .preview {
+            width: 50px;
+            height: 50px;
+            background: #1a73e8;
+            margin: 0 auto 10px;
+            border-radius: 5px;
+        }
+
+        .visual-item code {
+            font-size: 0.7rem;
+            color: #1a73e8;
+        }
+
+        /* Transform demos - ANIMIRANI */
+        .rotate {
+            animation: demoRotate 3s linear infinite;
+        }
+        .scale {
+            animation: demoScale 2s ease-in-out infinite;
+        }
+        .skew {
+            animation: demoSkew 2s ease-in-out infinite alternate;
+        }
+        .translate {
+            animation: demoTranslate 2s ease-in-out infinite alternate;
+        }
+
+        @keyframes demoRotate {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        @keyframes demoScale {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(0.6); }
+        }
+
+        @keyframes demoSkew {
+            from { transform: skewX(-20deg); }
+            to { transform: skewX(20deg); }
+        }
+
+        /* translateX = horizontalni pomak (lijevo-desno) */
+        @keyframes demoTranslate {
+            from { transform: translateX(-10px); }
+            to { transform: translateX(10px); }
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 768px) {
+            header h1 {
+                font-size: 1.8rem;
+            }
+            .container {
+                padding: 20px 15px;
+            }
+            .section {
+                padding: 20px;
+            }
+            .section h2 {
+                font-size: 1.4rem;
+            }
+            .nav {
+                padding: 10px 15px;
+                gap: 10px;
+            }
+            .nav a {
+                font-size: 0.8rem;
+                padding: 4px 10px;
+            }
+            .two-column {
+                grid-template-columns: 1fr;
+            }
+            .code-block {
+                padding: 15px;
+                font-size: 0.85rem;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .ease, .ease-in, .ease-out, .ease-in-out, .linear,
+            .rotate, .scale, .skew, .translate {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <h1>&#128214; CSS Animacije Cheatsheet</h1>
+        <p>Sve što trebaš znati o CSS animacijama na jednom mjestu</p>
+    </header>
+
+    <nav class="nav">
+        <a href="#transitions">Transitions</a>
+        <a href="#keyframes">@keyframes</a>
+        <a href="#animation">Animation</a>
+        <a href="#transform">Transform</a>
+        <a href="#timing">Timing</a>
+        <a href="#examples">Primjeri</a>
+        <a href="#tips">Savjeti</a>
+    </nav>
+
+    <div class="container">
+
+        <!-- TRANSITIONS -->
+        <section class="section" id="transitions">
+            <h2>&#9193; Transition (Prijelazi)</h2>
+            <p>Transition stvara glatki prijelaz između dva stanja elementa (npr. na hover).</p>
+
+            <h3>Osnovna sintaksa</h3>
+            <div class="code-block">
+<code><span class="selector">.element</span> {
+    <span class="property">transition</span>: <span class="value">property duration timing-function delay</span>;
+}
+
+<span class="comment">/* Primjer */</span>
+<span class="selector">.button</span> {
+    <span class="property">background</span>: <span class="value">blue</span>;
+    <span class="property">transition</span>: <span class="value">background 0.3s ease</span>;
+}
+
+<span class="selector">.button:hover</span> {
+    <span class="property">background</span>: <span class="value">red</span>;
+}</code>
+            </div>
+
+            <h3>Transition svojstva</h3>
+            <table>
+                <tr>
+                    <th>Svojstvo</th>
+                    <th>Opis</th>
+                    <th>Primjer</th>
+                </tr>
+                <tr>
+                    <td><code>transition-property</code></td>
+                    <td>Koje CSS svojstvo animirati</td>
+                    <td><code>all</code>, <code>background</code>, <code>transform</code></td>
+                </tr>
+                <tr>
+                    <td><code>transition-duration</code></td>
+                    <td>Trajanje animacije</td>
+                    <td><code>0.3s</code>, <code>500ms</code>, <code>2s</code></td>
+                </tr>
+                <tr>
+                    <td><code>transition-timing-function</code></td>
+                    <td>Brzina kroz vrijeme</td>
+                    <td><code>ease</code>, <code>linear</code>, <code>ease-in-out</code></td>
+                </tr>
+                <tr>
+                    <td><code>transition-delay</code></td>
+                    <td>Odgoda prije početka</td>
+                    <td><code>0s</code>, <code>0.5s</code>, <code>1s</code></td>
+                </tr>
+            </table>
+
+            <h3>Skraćeni zapis (shorthand)</h3>
+            <div class="code-block">
+<code><span class="comment">/* transition: property duration timing-function delay; */</span>
+<span class="property">transition</span>: <span class="value">all 0.3s ease 0s</span>;
+<span class="property">transition</span>: <span class="value">transform 0.5s ease-in-out</span>;
+<span class="property">transition</span>: <span class="value">background 0.3s, transform 0.5s</span>; <span class="comment">/* više svojstava */</span></code>
+            </div>
+        </section>
+
+        <!-- KEYFRAMES -->
+        <section class="section" id="keyframes">
+            <h2>&#127916; @keyframes (Definiranje animacije)</h2>
+            <p>@keyframes definira korake animacije - od početka do kraja.</p>
+
+            <h3>Osnovna sintaksa</h3>
+            <div class="code-block">
+<code><span class="comment">/* Jednostavno: from/to */</span>
+<span class="selector">@keyframes imeAnimacije</span> {
+    <span class="selector">from</span> {
+        <span class="property">opacity</span>: <span class="value">0</span>;
+    }
+    <span class="selector">to</span> {
+        <span class="property">opacity</span>: <span class="value">1</span>;
+    }
+}
+
+<span class="comment">/* Detaljno: postoci */</span>
+<span class="selector">@keyframes bounce</span> {
+    <span class="selector">0%</span>   { <span class="property">transform</span>: <span class="value">translateY(0)</span>; }
+    <span class="selector">50%</span>  { <span class="property">transform</span>: <span class="value">translateY(-30px)</span>; }
+    <span class="selector">100%</span> { <span class="property">transform</span>: <span class="value">translateY(0)</span>; }
+}</code>
+            </div>
+
+            <h3>Napredni primjeri</h3>
+            <div class="code-block">
+<code><span class="comment">/* Više svojstava odjednom */</span>
+<span class="selector">@keyframes slideIn</span> {
+    <span class="selector">from</span> {
+        <span class="property">transform</span>: <span class="value">translateX(-100%)</span>;
+        <span class="property">opacity</span>: <span class="value">0</span>;
+    }
+    <span class="selector">to</span> {
+        <span class="property">transform</span>: <span class="value">translateX(0)</span>;
+        <span class="property">opacity</span>: <span class="value">1</span>;
+    }
+}
+
+<span class="comment">/* Više koraka */</span>
+<span class="selector">@keyframes colorChange</span> {
+    <span class="selector">0%</span>   { <span class="property">background</span>: <span class="value">red</span>; }
+    <span class="selector">25%</span>  { <span class="property">background</span>: <span class="value">yellow</span>; }
+    <span class="selector">50%</span>  { <span class="property">background</span>: <span class="value">green</span>; }
+    <span class="selector">75%</span>  { <span class="property">background</span>: <span class="value">blue</span>; }
+    <span class="selector">100%</span> { <span class="property">background</span>: <span class="value">red</span>; }
+}</code>
+            </div>
+        </section>
+
+        <!-- ANIMATION -->
+        <section class="section" id="animation">
+            <h2>&#9654; Animation (Primjena animacije)</h2>
+            <p>Animation svojstvo primjenjuje @keyframes animaciju na element.</p>
+
+            <h3>Sva animation svojstva</h3>
+            <table>
+                <tr>
+                    <th>Svojstvo</th>
+                    <th>Opis</th>
+                    <th>Vrijednosti</th>
+                </tr>
+                <tr>
+                    <td><code>animation-name</code></td>
+                    <td>Ime @keyframes animacije</td>
+                    <td><code>bounce</code>, <code>slideIn</code>, <code>none</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-duration</code></td>
+                    <td>Trajanje jednog ciklusa</td>
+                    <td><code>1s</code>, <code>500ms</code>, <code>2.5s</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-timing-function</code></td>
+                    <td>Krivulja brzine</td>
+                    <td><code>ease</code>, <code>linear</code>, <code>steps(5)</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-delay</code></td>
+                    <td>Odgoda prije početka</td>
+                    <td><code>0s</code>, <code>1s</code>, <code>-0.5s</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-iteration-count</code></td>
+                    <td>Broj ponavljanja</td>
+                    <td><code>1</code>, <code>3</code>, <code>infinite</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-direction</code></td>
+                    <td>Smjer animacije</td>
+                    <td><code>normal</code>, <code>reverse</code>, <code>alternate</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-fill-mode</code></td>
+                    <td>Stanje prije/poslije</td>
+                    <td><code>none</code>, <code>forwards</code>, <code>backwards</code>, <code>both</code></td>
+                </tr>
+                <tr>
+                    <td><code>animation-play-state</code></td>
+                    <td>Pauza/play</td>
+                    <td><code>running</code>, <code>paused</code></td>
+                </tr>
+            </table>
+
+            <h3>Skraćeni zapis (shorthand)</h3>
+            <div class="code-block">
+<code><span class="comment">/* animation: name duration timing-function delay iteration-count direction fill-mode; */</span>
+
+<span class="property">animation</span>: <span class="value">bounce 1s ease infinite</span>;
+<span class="property">animation</span>: <span class="value">slideIn 0.5s ease-out forwards</span>;
+<span class="property">animation</span>: <span class="value">pulse 2s ease-in-out 0.5s infinite alternate</span>;
+
+<span class="comment">/* Više animacija odjednom */</span>
+<span class="property">animation</span>: <span class="value">bounce 1s infinite, fadeIn 0.5s forwards</span>;</code>
+            </div>
+
+            <h3>animation-direction vrijednosti</h3>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <strong>normal</strong>
+                    <p>0% → 100%</p>
+                    <code>Uvijek naprijed</code>
+                </div>
+                <div class="demo-box">
+                    <strong>reverse</strong>
+                    <p>100% → 0%</p>
+                    <code>Uvijek unatrag</code>
+                </div>
+                <div class="demo-box">
+                    <strong>alternate</strong>
+                    <p>0% → 100% → 0%</p>
+                    <code>Naprijed-nazad</code>
+                </div>
+                <div class="demo-box">
+                    <strong>alternate-reverse</strong>
+                    <p>100% → 0% → 100%</p>
+                    <code>Nazad-naprijed</code>
+                </div>
+            </div>
+
+            <h3>animation-fill-mode vrijednosti</h3>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <strong>none</strong>
+                    <code>Vraća se na početno stanje</code>
+                </div>
+                <div class="demo-box">
+                    <strong>forwards</strong>
+                    <code>Ostaje na završnom stanju</code>
+                </div>
+                <div class="demo-box">
+                    <strong>backwards</strong>
+                    <code>Primjeni početno stanje za vrijeme delaya</code>
+                </div>
+                <div class="demo-box">
+                    <strong>both</strong>
+                    <code>forwards + backwards</code>
+                </div>
+            </div>
+        </section>
+
+        <!-- TRANSFORM -->
+        <section class="section" id="transform">
+            <h2>&#128260; Transform (Transformacije)</h2>
+            <p>Transform mijenja oblik, poziciju i veličinu elementa. Često se koristi s animacijama.</p>
+
+            <h3>Transform funkcije</h3>
+            <table>
+                <tr>
+                    <th>Funkcija</th>
+                    <th>Opis</th>
+                    <th>Primjer</th>
+                </tr>
+                <tr>
+                    <td><code>translateX()</code></td>
+                    <td>Pomak horizontalno</td>
+                    <td><code>translateX(50px)</code>, <code>translateX(-100%)</code></td>
+                </tr>
+                <tr>
+                    <td><code>translateY()</code></td>
+                    <td>Pomak vertikalno</td>
+                    <td><code>translateY(-20px)</code>, <code>translateY(50%)</code></td>
+                </tr>
+                <tr>
+                    <td><code>translate()</code></td>
+                    <td>Pomak X i Y</td>
+                    <td><code>translate(50px, 20px)</code></td>
+                </tr>
+                <tr>
+                    <td><code>rotate()</code></td>
+                    <td>Rotacija</td>
+                    <td><code>rotate(45deg)</code>, <code>rotate(-90deg)</code></td>
+                </tr>
+                <tr>
+                    <td><code>scale()</code></td>
+                    <td>Skaliranje</td>
+                    <td><code>scale(1.5)</code>, <code>scale(0.5)</code>, <code>scale(2, 1)</code></td>
+                </tr>
+                <tr>
+                    <td><code>scaleX() / scaleY()</code></td>
+                    <td>Skaliranje po osi</td>
+                    <td><code>scaleX(2)</code>, <code>scaleY(0.5)</code></td>
+                </tr>
+                <tr>
+                    <td><code>skewX() / skewY()</code></td>
+                    <td>Nagib/iskrivljenje</td>
+                    <td><code>skewX(20deg)</code>, <code>skewY(-10deg)</code></td>
+                </tr>
+                <tr>
+                    <td><code>rotateX() / rotateY()</code></td>
+                    <td>3D rotacija</td>
+                    <td><code>rotateX(180deg)</code>, <code>rotateY(45deg)</code></td>
+                </tr>
+            </table>
+
+            <h3>Vizualni pregled</h3>
+            <div class="visual-grid">
+                <div class="visual-item">
+                    <div class="preview rotate"></div>
+                    <code>rotate(45deg)</code>
+                </div>
+                <div class="visual-item">
+                    <div class="preview scale"></div>
+                    <code>scale(0.7)</code>
+                </div>
+                <div class="visual-item">
+                    <div class="preview skew"></div>
+                    <code>skewX(20deg)</code>
+                </div>
+                <div class="visual-item">
+                    <div class="preview translate"></div>
+                    <code>translateX(10px)</code>
+                </div>
+            </div>
+
+            <h3>Kombiniranje transformacija</h3>
+            <div class="code-block">
+<code><span class="comment">/* Više transformacija u jednoj liniji */</span>
+<span class="property">transform</span>: <span class="value">translateX(50px) rotate(45deg) scale(1.2)</span>;
+
+<span class="comment">/* Redoslijed je bitan! */</span>
+<span class="property">transform</span>: <span class="value">rotate(45deg) translateX(50px)</span>; <span class="comment">/* različit rezultat */</span>
+<span class="property">transform</span>: <span class="value">translateX(50px) rotate(45deg)</span>; <span class="comment">/* od ovog */</span></code>
+            </div>
+
+            <h3>Transform origin</h3>
+            <div class="code-block">
+<code><span class="comment">/* Točka oko koje se transformira (default: center) */</span>
+<span class="property">transform-origin</span>: <span class="value">center</span>;        <span class="comment">/* default */</span>
+<span class="property">transform-origin</span>: <span class="value">top left</span>;      <span class="comment">/* gornji lijevi kut */</span>
+<span class="property">transform-origin</span>: <span class="value">50% 100%</span>;      <span class="comment">/* donji centar */</span>
+<span class="property">transform-origin</span>: <span class="value">0 0</span>;           <span class="comment">/* gornji lijevi kut */</span></code>
+            </div>
+        </section>
+
+        <!-- TIMING FUNCTIONS -->
+        <section class="section" id="timing">
+            <h2>&#9201; Timing Functions (Krivulje brzine)</h2>
+            <p>Određuju kako se animacija ubrzava/usporava kroz vrijeme.</p>
+
+            <h3>Ugrađene funkcije</h3>
+            <table>
+                <tr>
+                    <th>Vrijednost</th>
+                    <th>Opis</th>
+                    <th>Kada koristiti</th>
+                </tr>
+                <tr>
+                    <td><code>ease</code></td>
+                    <td>Sporo → brzo → sporo</td>
+                    <td>Default, prirodno izgleda</td>
+                </tr>
+                <tr>
+                    <td><code>ease-in</code></td>
+                    <td>Sporo → brzo</td>
+                    <td>Elementi koji izlaze</td>
+                </tr>
+                <tr>
+                    <td><code>ease-out</code></td>
+                    <td>Brzo → sporo</td>
+                    <td>Elementi koji ulaze</td>
+                </tr>
+                <tr>
+                    <td><code>ease-in-out</code></td>
+                    <td>Sporo → brzo → sporo</td>
+                    <td>Kontinuirane animacije</td>
+                </tr>
+                <tr>
+                    <td><code>linear</code></td>
+                    <td>Konstantna brzina</td>
+                    <td>Rotacije, loaderi</td>
+                </tr>
+                <tr>
+                    <td><code>steps(n)</code></td>
+                    <td>n diskretnih koraka</td>
+                    <td>Sprite animacije, typing</td>
+                </tr>
+            </table>
+
+            <h3>Usporedba timing funkcija uživo</h3>
+            <div class="demo-container">
+                <div class="demo-box">
+                    <div class="box ease"></div>
+                    <code>ease</code>
+                </div>
+                <div class="demo-box">
+                    <div class="box ease-in"></div>
+                    <code>ease-in</code>
+                </div>
+                <div class="demo-box">
+                    <div class="box ease-out"></div>
+                    <code>ease-out</code>
+                </div>
+                <div class="demo-box">
+                    <div class="box ease-in-out"></div>
+                    <code>ease-in-out</code>
+                </div>
+                <div class="demo-box">
+                    <div class="box linear"></div>
+                    <code>linear</code>
+                </div>
+            </div>
+
+            <h3>Custom cubic-bezier</h3>
+            <div class="code-block">
+<code><span class="comment">/* cubic-bezier(x1, y1, x2, y2) */</span>
+<span class="property">transition-timing-function</span>: <span class="value">cubic-bezier(0.68, -0.55, 0.265, 1.55)</span>; <span class="comment">/* bounce */</span>
+<span class="property">transition-timing-function</span>: <span class="value">cubic-bezier(0.175, 0.885, 0.32, 1.275)</span>; <span class="comment">/* elastic */</span>
+
+<span class="comment">/* Alat za kreiranje: cubic-bezier.com */</span></code>
+            </div>
+
+            <h3>Steps() funkcija</h3>
+            <div class="code-block">
+<code><span class="comment">/* steps(broj_koraka, jump-term) */</span>
+<span class="property">animation-timing-function</span>: <span class="value">steps(5)</span>;           <span class="comment">/* 5 koraka */</span>
+<span class="property">animation-timing-function</span>: <span class="value">steps(10, end)</span>;     <span class="comment">/* skok na kraju koraka */</span>
+<span class="property">animation-timing-function</span>: <span class="value">steps(1, start)</span>;   <span class="comment">/* instant promjena */</span>
+
+<span class="comment">/* Primjer: typing efekt */</span>
+<span class="selector">@keyframes typing</span> {
+    <span class="selector">from</span> { <span class="property">width</span>: <span class="value">0</span>; }
+    <span class="selector">to</span> { <span class="property">width</span>: <span class="value">100%</span>; }
+}
+<span class="selector">.text</span> {
+    <span class="property">animation</span>: <span class="value">typing 3s steps(20) forwards</span>;
+}</code>
+            </div>
+        </section>
+
+        <!-- PRIMJERI -->
+        <section class="section" id="examples">
+            <h2>&#128161; Gotovi Primjeri (Copy-Paste)</h2>
+
+            <h3>Fade In</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes fadeIn</span> {
+    <span class="selector">from</span> { <span class="property">opacity</span>: <span class="value">0</span>; }
+    <span class="selector">to</span> { <span class="property">opacity</span>: <span class="value">1</span>; }
+}
+<span class="selector">.element</span> { <span class="property">animation</span>: <span class="value">fadeIn 0.5s ease forwards</span>; }</code>
+            </div>
+
+            <h3>Slide In From Left</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes slideInLeft</span> {
+    <span class="selector">from</span> { <span class="property">transform</span>: <span class="value">translateX(-100%)</span>; <span class="property">opacity</span>: <span class="value">0</span>; }
+    <span class="selector">to</span> { <span class="property">transform</span>: <span class="value">translateX(0)</span>; <span class="property">opacity</span>: <span class="value">1</span>; }
+}
+<span class="selector">.element</span> { <span class="property">animation</span>: <span class="value">slideInLeft 0.5s ease-out forwards</span>; }</code>
+            </div>
+
+            <h3>Bounce</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes bounce</span> {
+    <span class="selector">0%, 100%</span> { <span class="property">transform</span>: <span class="value">translateY(0)</span>; }
+    <span class="selector">50%</span> { <span class="property">transform</span>: <span class="value">translateY(-20px)</span>; }
+}
+<span class="selector">.element</span> { <span class="property">animation</span>: <span class="value">bounce 1s ease infinite</span>; }</code>
+            </div>
+
+            <h3>Pulse</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes pulse</span> {
+    <span class="selector">0%, 100%</span> { <span class="property">transform</span>: <span class="value">scale(1)</span>; }
+    <span class="selector">50%</span> { <span class="property">transform</span>: <span class="value">scale(1.1)</span>; }
+}
+<span class="selector">.element</span> { <span class="property">animation</span>: <span class="value">pulse 2s ease-in-out infinite</span>; }</code>
+            </div>
+
+            <h3>Shake</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes shake</span> {
+    <span class="selector">0%, 100%</span> { <span class="property">transform</span>: <span class="value">translateX(0)</span>; }
+    <span class="selector">10%, 30%, 50%, 70%, 90%</span> { <span class="property">transform</span>: <span class="value">translateX(-5px)</span>; }
+    <span class="selector">20%, 40%, 60%, 80%</span> { <span class="property">transform</span>: <span class="value">translateX(5px)</span>; }
+}
+<span class="selector">.element</span> { <span class="property">animation</span>: <span class="value">shake 0.5s ease</span>; }</code>
+            </div>
+
+            <h3>Spin (Rotacija)</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes spin</span> {
+    <span class="selector">from</span> { <span class="property">transform</span>: <span class="value">rotate(0deg)</span>; }
+    <span class="selector">to</span> { <span class="property">transform</span>: <span class="value">rotate(360deg)</span>; }
+}
+<span class="selector">.loader</span> { <span class="property">animation</span>: <span class="value">spin 1s linear infinite</span>; }</code>
+            </div>
+
+            <h3>Hover Lift Effect</h3>
+            <div class="code-block">
+<code><span class="selector">.card</span> {
+    <span class="property">transition</span>: <span class="value">transform 0.3s ease, box-shadow 0.3s ease</span>;
+}
+<span class="selector">.card:hover</span> {
+    <span class="property">transform</span>: <span class="value">translateY(-10px)</span>;
+    <span class="property">box-shadow</span>: <span class="value">0 20px 40px rgba(0,0,0,0.2)</span>;
+}</code>
+            </div>
+
+            <h3>Gradient Animation</h3>
+            <div class="code-block">
+<code><span class="selector">@keyframes gradient</span> {
+    <span class="selector">0%</span> { <span class="property">background-position</span>: <span class="value">0% 50%</span>; }
+    <span class="selector">50%</span> { <span class="property">background-position</span>: <span class="value">100% 50%</span>; }
+    <span class="selector">100%</span> { <span class="property">background-position</span>: <span class="value">0% 50%</span>; }
+}
+<span class="selector">.element</span> {
+    <span class="property">background</span>: <span class="value">linear-gradient(-45deg, #ee7752, #e73c7e, #23a6d5, #23d5ab)</span>;
+    <span class="property">background-size</span>: <span class="value">400% 400%</span>;
+    <span class="property">animation</span>: <span class="value">gradient 15s ease infinite</span>;
+}</code>
+            </div>
+        </section>
+
+        <!-- TIPS -->
+        <section class="section" id="tips">
+            <h2>&#128218; Savjeti i Best Practices</h2>
+
+            <div class="tip">
+                <strong>&#9989; Koristi transform i opacity</strong><br>
+                Ova svojstva su hardverski akcelerirana i najperformantnija za animacije.
+            </div>
+
+            <div class="tip">
+                <strong>&#9989; Koristi will-change za kompleksne animacije</strong><br>
+                <code>will-change: transform;</code> priprema browser za animaciju.
+            </div>
+
+            <div class="warning">
+                <strong>&#10060; Izbjegavaj animirati width, height, top, left</strong><br>
+                Ova svojstva uzrokuju layout reflow i usporavaju stranicu. Koristi transform umjesto toga.
+            </div>
+
+            <div class="warning">
+                <strong>&#10060; Ne pretjeruj s animacijama</strong><br>
+                Previše animacija odvlači pažnju i može uzrokovati mučninu kod korisnika.
+            </div>
+
+            <div class="tip">
+                <strong>&#9989; Poštuj prefers-reduced-motion</strong><br>
+                Neki korisnici žele smanjene animacije:
+                <div class="code-block">
+<code><span class="selector">@media (prefers-reduced-motion: reduce)</span> {
+    <span class="selector">*</span> {
+        <span class="property">animation-duration</span>: <span class="value">0.01ms !important</span>;
+        <span class="property">transition-duration</span>: <span class="value">0.01ms !important</span>;
+    }
+}</code>
+                </div>
+            </div>
+
+            <h3>Preporučena trajanja</h3>
+            <table>
+                <tr>
+                    <th>Tip animacije</th>
+                    <th>Preporučeno trajanje</th>
+                </tr>
+                <tr>
+                    <td>Hover efekti</td>
+                    <td><code>0.2s - 0.3s</code></td>
+                </tr>
+                <tr>
+                    <td>Modali, dropdowni</td>
+                    <td><code>0.3s - 0.4s</code></td>
+                </tr>
+                <tr>
+                    <td>Page transitions</td>
+                    <td><code>0.4s - 0.6s</code></td>
+                </tr>
+                <tr>
+                    <td>Loading animacije</td>
+                    <td><code>1s - 2s</code> (beskonačne)</td>
+                </tr>
+                <tr>
+                    <td>Attention grabbers</td>
+                    <td><code>0.5s - 1s</code></td>
+                </tr>
+            </table>
+
+            <h3>Svojstva koja se mogu animirati</h3>
+            <div class="code-block">
+<code><span class="comment">/* DOBRO - hardverski akcelelirano */</span>
+transform, opacity
+
+<span class="comment">/* OK - ali sporije */</span>
+color, background-color, border-color
+box-shadow, text-shadow
+filter, backdrop-filter
+
+<span class="comment">/* IZBJEGAVATI - uzrokuje reflow */</span>
+width, height, top, left, right, bottom
+margin, padding, font-size</code>
+            </div>
+        </section>
+
+    </div>
+
+    <footer style="text-align: center; padding: 30px; color: #64748b; border-top: 1px solid #e2e8f0; background: white;">
+        <p>CSS Animacije Cheatsheet | 3. razred Tehničar za računalstvo</p>
+        <p style="margin-top: 10px; font-size: 0.85rem;">Za printanje: Ctrl+P (ili Cmd+P na Macu)</p>
+    </footer>
+
+</body>
+</html>

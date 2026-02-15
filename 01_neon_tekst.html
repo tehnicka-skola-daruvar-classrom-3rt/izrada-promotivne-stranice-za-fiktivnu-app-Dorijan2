@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Glow Tekst</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE - SVIJETLA TEMA
+           ============================================ */
+        body {
+            background-color: #f0f4f8;     /* Svijetlo siva pozadina - dobra za projektor */
+            min-height: 100vh;             /* vh = viewport height, 100vh znači puna visina prozora */
+            display: flex;                 /* Flexbox za centriranje sadržaja */
+            justify-content: center;       /* Horizontalno centriranje */
+            align-items: center;           /* Vertikalno centriranje */
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* ============================================
+           NEON TEKST - PLAVA BOJA S TREPERENJEM
+           ============================================ */
+        .neon-text {
+            font-size: 5rem;               /* rem = relativna jedinica prema root font-size (obično 16px), dakle 5rem = 80px */
+            color: #1a5fb4;                /* Tamno plava boja teksta - vidljiva na svijetloj pozadini */
+
+            /* TEXT-SHADOW stvara neon efekt!
+               Format: horizontal-offset vertical-offset blur-radius color
+               Više sjena s većim blur-om stvara intenzivniji sjaj */
+            text-shadow:
+                0 0 10px #3584e4,          /* Plava - prvi sloj sjaja, malo zamućen */
+                0 0 20px #3584e4,          /* Drugi sloj - više zamućen, širi se dalje */
+                0 0 40px #3584e4,          /* Treći sloj - još širi */
+                0 0 80px #3584e4;          /* Četvrti sloj - najširi, stvara "auru" */
+
+            /* ANIMATION svojstvo:
+               ime-animacije trajanje ponavljanje smjer */
+            animation: flicker 1.5s infinite alternate;
+            /* flicker = ime @keyframes animacije
+               1.5s = trajanje jednog ciklusa
+               infinite = ponavlja se beskonačno
+               alternate = ide naprijed pa nazad (0%->100%->0%->100%...) */
+        }
+
+        /* ============================================
+           @KEYFRAMES - Definicija animacije treperenja
+           ============================================ */
+        @keyframes flicker {
+            /* Postotak označava trenutak u animaciji
+               Možemo grupirati više postotaka ako imaju iste stilove */
+            0%, 18%, 22%, 25%, 53%, 57%, 100% {
+                /* U ovim trenucima neon svijetli normalno */
+                text-shadow:
+                    0 0 10px #3584e4,
+                    0 0 20px #3584e4,
+                    0 0 40px #3584e4,
+                    0 0 80px #3584e4;
+            }
+            20%, 24%, 55% {
+                /* U ovim trenucima neon se "gasi" - simulira treperenje
+                   kao prava neon cijev! */
+                text-shadow: none;
+            }
+        }
+
+        /* ============================================
+           NEON TEKST - LJUBIČASTA VERZIJA
+           ============================================ */
+        .neon-pink {
+            color: #813d9c;                /* Tamno ljubičasta - vidljiva na svijetloj pozadini */
+            text-shadow:
+                0 0 10px #c061cb,          /* Ljubičasta */
+                0 0 20px #c061cb,
+                0 0 40px #c061cb,
+                0 0 80px #c061cb;
+
+            animation: glow-pink 2s ease-in-out infinite alternate;
+            /* ease-in-out = animacija počinje sporo, ubrza se u sredini, pa opet uspori
+               Daje organski, "disajući" efekt */
+        }
+
+        /* ============================================
+           @KEYFRAMES - Pulsiranje ljubičastog neon sjaja
+           ============================================ */
+        @keyframes glow-pink {
+            from {
+                /* from = isto kao 0% - početak animacije
+                   Manji sjaj (10px, 20px, 40px) */
+                text-shadow:
+                    0 0 10px #c061cb,
+                    0 0 20px #c061cb,
+                    0 0 40px #c061cb;
+            }
+            to {
+                /* to = isto kao 100% - kraj animacije
+                   Veći sjaj (20px, 40px, 80px, 120px) - dodali smo i četvrti sloj!
+                   Animacija "diše" - sjaj se širi i skuplja */
+                text-shadow:
+                    0 0 20px #c061cb,
+                    0 0 40px #c061cb,
+                    0 0 80px #c061cb,
+                    0 0 120px #c061cb;
+            }
+        }
+
+        /* ============================================
+           KONTEJNER ZA CENTRIRANJE TEKSTA
+           ============================================ */
+        .container {
+            text-align: center;            /* Centrira tekst unutar kontejnera */
+            background: white;
+            padding: 60px 80px;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        .subtitle {
+            font-size: 2rem;               /* Manji font za podnaslov */
+            margin-top: 20px;              /* Razmak od gornjeg naslova */
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN - Prilagodba za manje ekrane
+           @media = pravilo koje se aktivira samo ako je uvjet istinit
+           max-width: 768px = ako je širina ekrana 768px ili manja (tableti, mobiteli)
+           ============================================ */
+        @media (max-width: 768px) {
+            .neon-text {
+                font-size: 2.5rem;         /* Smanjen font za mobilne uređaje */
+            }
+            .subtitle {
+                font-size: 1.2rem;
+            }
+            .container {
+                padding: 30px 20px;        /* Manji padding na mobitelima */
+                margin: 20px;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Poštivanje korisničkih postavki
+           Neki korisnici imaju osjetljivost na pokret/animacije.
+           Ovo pravilo smanjuje/uklanja animacije ako korisnik
+           to želi u postavkama svog uređaja.
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .neon-text,
+            .neon-pink {
+                animation: none;           /* Isključuje animacije */
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Glavni naslov s plavim neon efektom i treperenjem -->
+        <h1 class="neon-text">CYBER</h1>
+
+        <!-- Podnaslov s ljubičastim neon efektom i pulsiranjem -->
+        <h2 class="neon-pink subtitle">PUNK 2077</h2>
+    </div>
+</body>
+</html>

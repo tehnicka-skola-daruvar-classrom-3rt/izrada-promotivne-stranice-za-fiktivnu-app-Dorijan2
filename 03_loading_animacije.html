@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Animacije</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE - SVIJETLA TEMA
+           ============================================ */
+        body {
+            background: #f0f4f8;           /* Svijetlo siva - dobra za projektor */
+            min-height: 100vh;
+            display: flex;
+            flex-wrap: wrap;               /* Elementi prelaze u novi red ako nema mjesta */
+            justify-content: center;
+            align-items: center;
+            gap: 80px;                     /* Veći razmak između loadera */
+            padding: 40px;
+            font-family: Arial, sans-serif;
+        }
+
+        .loader-container {
+            text-align: center;
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .loader-container p {
+            color: #555;
+            margin-top: 20px;
+            font-weight: bold;
+        }
+
+        /* ============================================
+           SPINNER - Klasični rotirajući krug
+           Najjednostavniji loading indikator
+           ============================================ */
+        .spinner {
+            width: 50px;
+            height: 50px;
+
+            /* border stvara krug s jednom obojenom stranom */
+            border: 5px solid #e0e0e0;     /* Svijetli dio kruga */
+            border-top: 5px solid #1a73e8; /* Plavi dio (samo gornja strana) */
+            border-radius: 50%;            /* 50% radius = savršeni krug */
+
+            animation: spin 1s linear infinite;
+            /* linear = konstantna brzina rotacije
+               1s = jedan puni krug svaku sekundu */
+        }
+
+        /* ============================================
+           @KEYFRAMES SPIN - Jednostavna rotacija
+           ============================================ */
+        @keyframes spin {
+            0% { transform: rotate(0deg); }     /* Početak - 0 stupnjeva */
+            100% { transform: rotate(360deg); } /* Kraj - puni krug (360°) */
+        }
+
+        /* ============================================
+           DOTS - Skačuće točkice (Bouncing Dots)
+           Tri točkice koje se naizmjenično povećavaju
+           ============================================ */
+        .dots {
+            display: flex;
+            gap: 8px;                      /* Razmak između točkica */
+        }
+
+        .dots span {
+            width: 15px;
+            height: 15px;
+            background: #d93025;           /* Crvena boja */
+            border-radius: 50%;            /* Krug */
+
+            animation: bounce 1.4s ease-in-out infinite both;
+            /* both = primjenjuje stilove iz keyframesa i prije i poslije animacije
+               1.4s = ukupno trajanje jednog ciklusa */
+        }
+
+        /* ============================================
+           :NTH-CHILD SELEKTOR - Odabir pojedinog elementa
+
+           nth-child(n) odabire n-ti element među siblings (braćom/sestrama)
+           Koristimo ga za različite animation-delay na svakoj točkici
+           ============================================ */
+        .dots span:nth-child(1) { animation-delay: -0.32s; }
+        .dots span:nth-child(2) { animation-delay: -0.16s; }
+        .dots span:nth-child(3) { animation-delay: 0s; }
+        /*
+           ZAŠTO NEGATIVAN DELAY?
+           Negativan delay znači da animacija počinje kao da je već prošlo toliko vremena.
+
+           Primjer: ako je delay -0.32s, animacija počinje od trenutka 0.32s
+           (ne čeka, nego "preskače" prvih 0.32 sekunde)
+
+           Ovo stvara efekt da su točkice "izvan faze" - dok prva ide gore,
+           druga je na sredini, treća ide dolje. Daje efekt "vala"!
+
+           Bez delaya, sve tri bi se pomicale istovremeno.
+        */
+
+        /* ============================================
+           @KEYFRAMES BOUNCE - Skaliranje gore/dolje
+           ============================================ */
+        @keyframes bounce {
+            0%, 80%, 100% {
+                transform: scale(0);       /* Točkica je "nevidljiva" (veličina 0) */
+            }
+            40% {
+                transform: scale(1);       /* Točkica je pune veličine */
+            }
+            /*
+               Timing: 0%=mala, 40%=velika, 80%=mala, 100%=mala
+               Većinu vremena točkica je mala, nakratko se "napuše"
+            */
+        }
+
+        /* ============================================
+           BARS - Equalizer stil (glazbene trake)
+           Oponaša audio visualizer
+           ============================================ */
+        .bars {
+            display: flex;
+            gap: 4px;
+            align-items: end;              /* Trake se poravnavaju po dnu */
+            height: 50px;                  /* Fiksna visina kontejnera */
+        }
+
+        .bars span {
+            width: 8px;                    /* Širina svake trake */
+            background: linear-gradient(to top, #1a73e8, #4285f4);  /* Plavi gradijent */
+            animation: bars 1s ease-in-out infinite;
+        }
+
+        /* Svaka traka ima drugačiji delay za "val" efekt */
+        .bars span:nth-child(1) { animation-delay: 0s; }
+        .bars span:nth-child(2) { animation-delay: 0.1s; }    /* +0.1s */
+        .bars span:nth-child(3) { animation-delay: 0.2s; }    /* +0.1s */
+        .bars span:nth-child(4) { animation-delay: 0.3s; }    /* +0.1s */
+        .bars span:nth-child(5) { animation-delay: 0.4s; }    /* +0.1s */
+        /*
+           Pozitivni delay ovdje - svaka traka kreće malo kasnije.
+           Razlika od 0.1s između svake stvara "val" koji putuje s lijeva na desno.
+        */
+
+        /* ============================================
+           @KEYFRAMES BARS - Promjena visine
+           ============================================ */
+        @keyframes bars {
+            0%, 100% { height: 10px; }     /* Mala visina na početku i kraju */
+            50% { height: 50px; }          /* Puna visina na sredini */
+        }
+
+        /* ============================================
+           PROGRESS BAR - Beskonačna traka napretka
+           Koristi ::after pseudo-element
+           ============================================ */
+        .progress-bar {
+            width: 200px;
+            height: 6px;
+            background: #e0e0e0;           /* Svijetla pozadina "praznog" dijela */
+            border-radius: 3px;
+            overflow: hidden;              /* VAŽNO! Skriva dio koji izlazi van */
+        }
+
+        /* ::after stvara "klizač" koji se pomiče */
+        .progress-bar::after {
+            content: '';                   /* Obavezno za pseudo-element */
+            display: block;
+            width: 40%;                    /* Klizač je 40% širine roditelja */
+            height: 100%;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);  /* Ljubičasti gradijent */
+            border-radius: 3px;
+            animation: progress 1.5s ease-in-out infinite;
+        }
+
+        /* ============================================
+           @KEYFRAMES PROGRESS - Horizontalno pomicanje
+           ============================================ */
+        @keyframes progress {
+            0% { transform: translateX(-100%); }   /* Počinje potpuno lijevo (izvan vidljivog) */
+            100% { transform: translateX(350%); }  /* Završava desno (izvan vidljivog) */
+            /*
+               Klizač "ulazi" s lijeve strane, prolazi kroz traku,
+               i "izlazi" na desnoj strani. overflow: hidden na roditelju
+               skriva dijelove izvan granica.
+            */
+        }
+
+        /* ============================================
+           RING - Dvostruki rotirajući prsten
+           Dva prstena koja se vrte u suprotnim smjerovima
+           ============================================ */
+        .ring {
+            width: 50px;
+            height: 50px;
+
+            /* Vanjski prsten - samo gornji i donji rub su vidljivi */
+            border: 5px solid transparent;     /* Prozirni obrub kao baza */
+            border-top: 5px solid #d93025;     /* Crveni vrh */
+            border-bottom: 5px solid #d93025;  /* Crveno dno */
+            border-radius: 50%;
+
+            animation: spin 1s linear infinite;  /* Koristi isti spin kao spinner */
+            position: relative;                  /* Za pozicioniranje ::before */
+
+            /* will-change optimizira performanse - govori pregledniku
+               da se pripremi za promjene transform svojstva */
+            will-change: transform;
+        }
+
+        /* ::before stvara unutarnji prsten */
+        .ring::before {
+            content: '';
+            position: absolute;
+
+            /* Pozicioniranje 5px od svake strane (unutar vanjskog prstena) */
+            top: 5px;
+            left: 5px;
+            right: 5px;
+            bottom: 5px;
+
+            /* Unutarnji prsten - lijevi i desni rub su vidljivi */
+            border: 5px solid transparent;
+            border-left: 5px solid #1a73e8;    /* Plava lijeva strana */
+            border-right: 5px solid #1a73e8;   /* Plava desna strana */
+            border-radius: 50%;
+
+            animation: spin 0.5s linear infinite reverse;
+            /*
+               reverse = animacija ide unatrag (od 100% prema 0%)
+               To znači da se vrti u SUPROTNOM smjeru od vanjskog prstena!
+
+               0.5s = brža rotacija nego vanjski (koji ima 1s)
+               Kombinacija različitih brzina i smjerova stvara složeni vizualni efekt.
+            */
+            will-change: transform;
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 600px) {
+            body {
+                gap: 40px;
+                padding: 20px;
+            }
+            .loader-container {
+                padding: 25px;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .spinner,
+            .dots span,
+            .bars span,
+            .progress-bar::after,
+            .ring,
+            .ring::before {
+                animation: none;
+            }
+            /* Statički prikaz umjesto animacija */
+            .dots span { transform: scale(1); }
+            .bars span { height: 30px; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Spinner - klasični rotirajući krug -->
+    <div class="loader-container">
+        <div class="spinner"></div>
+        <p>Spinner</p>
+    </div>
+
+    <!-- Dots - tri skačuće točkice -->
+    <div class="loader-container">
+        <div class="dots">
+            <!-- Svaki span je jedna točkica -->
+            <span></span>  <!-- nth-child(1) - delay -0.32s -->
+            <span></span>  <!-- nth-child(2) - delay -0.16s -->
+            <span></span>  <!-- nth-child(3) - delay 0s -->
+        </div>
+        <p>Bouncing Dots</p>
+    </div>
+
+    <!-- Bars - equalizer stil -->
+    <div class="loader-container">
+        <div class="bars">
+            <!-- 5 traka s različitim delayevima -->
+            <span></span>  <!-- delay 0s -->
+            <span></span>  <!-- delay 0.1s -->
+            <span></span>  <!-- delay 0.2s -->
+            <span></span>  <!-- delay 0.3s -->
+            <span></span>  <!-- delay 0.4s -->
+        </div>
+        <p>Music Bars</p>
+    </div>
+
+    <!-- Progress bar - klizač koristi ::after pseudo-element -->
+    <div class="loader-container">
+        <div class="progress-bar"></div>
+        <p>Progress Bar</p>
+    </div>
+
+    <!-- Ring - dvostruki prsten (vanjski + ::before za unutarnji) -->
+    <div class="loader-container">
+        <div class="ring"></div>
+        <p>Double Ring</p>
+    </div>
+</body>
+</html>

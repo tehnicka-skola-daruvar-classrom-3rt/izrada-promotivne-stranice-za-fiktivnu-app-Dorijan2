@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gaming Buttons</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE - SVIJETLA TEMA
+           ============================================ */
+        body {
+            /* Svijetli gradijent - dobar za projektor */
+            background: linear-gradient(135deg, #e8f4f8, #d1e8ff);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;        /* Elementi se slažu vertikalno (jedan ispod drugog) */
+            justify-content: center;
+            align-items: center;
+            gap: 30px;                     /* Razmak između gumbova */
+            font-family: 'Arial', sans-serif;
+        }
+
+        /* ============================================
+           PLAY BUTTON - PULSE (PULSIRANJE) EFEKT
+           Gumb koji "diše" - ima animirani obrub koji se širi
+           ============================================ */
+        .btn-play {
+            padding: 20px 60px;            /* Unutarnji razmak: 20px gore/dolje, 60px lijevo/desno */
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;     /* Pretvara tekst u VELIKA SLOVA */
+            color: white;
+            background: linear-gradient(45deg, #1a73e8, #4285f4);  /* Plavi gradijent */
+            border: none;                  /* Uklanja default obrub gumba */
+            border-radius: 50px;           /* Zaobljeni uglovi - 50px stvara "pilulu" oblik */
+            cursor: pointer;               /* Pokazivač miša postaje "ruka" */
+            position: relative;            /* Potrebno za apsolutno pozicionirane child elemente */
+            overflow: hidden;              /* Skriva sve što izlazi izvan granica gumba */
+
+            /* GLAVNA ANIMACIJA - pulse efekt */
+            animation: pulse 2s infinite;
+            /* pulse = ime animacije
+               2s = trajanje
+               infinite = beskonačno ponavljanje */
+        }
+
+        /* ============================================
+           @KEYFRAMES PULSE - Box-shadow se širi i blijedi
+           ============================================ */
+        @keyframes pulse {
+            0% {
+                /* box-shadow: h-offset v-offset blur spread color
+                   spread = koliko se sjena širi izvan elementa
+                   Počinjemo s 0 spread i 70% prozirnom bojom */
+                box-shadow: 0 0 0 0 rgba(26, 115, 232, 0.7);
+            }
+            70% {
+                /* Sjena se proširila na 20px, ali je potpuno prozirna (0 na kraju)
+                   Stvara efekt "prstena" koji se širi */
+                box-shadow: 0 0 0 20px rgba(26, 115, 232, 0);
+            }
+            100% {
+                /* Vraćamo na početak za glatki prijelaz */
+                box-shadow: 0 0 0 0 rgba(26, 115, 232, 0);
+            }
+        }
+
+        /* Hover efekt - gumb se poveća kad prijeđeš mišem */
+        .btn-play:hover {
+            transform: scale(1.1);         /* Povećava za 10% */
+            transition: transform 0.3s ease;  /* Glatka animacija promjene (ease = postupno ubrzanje pa usporenje) */
+        }
+
+        /* ============================================
+           DANGER BUTTON - SHAKE (TRESENJE) NA HOVER
+           Upozoravajući gumb koji se trese kad prijeđeš mišem
+           ============================================ */
+        .btn-danger {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: white;
+            background: linear-gradient(45deg, #d93025, #ea4335);  /* Crveni gradijent */
+            border: none;
+            border-radius: 10px;           /* Blago zaobljeni uglovi */
+            cursor: pointer;
+        }
+
+        /* Animacija se pokreće SAMO na hover */
+        .btn-danger:hover {
+            animation: shake 0.5s ease-in-out;
+            /* Trajanje je kratko (0.5s) i NE ponavlja se (nema "infinite")
+               Zato se trese samo jednom kad prijeđeš mišem */
+        }
+
+        /* ============================================
+           @KEYFRAMES SHAKE - Pomicanje lijevo-desno
+           ============================================ */
+        @keyframes shake {
+            /* translateX pomiče element horizontalno
+               Negativna vrijednost = lijevo, pozitivna = desno */
+            0%, 100% { transform: translateX(0); }      /* Početak i kraj - normalna pozicija */
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }  /* Pomak lijevo */
+            20%, 40%, 60%, 80% { transform: translateX(5px); }        /* Pomak desno */
+            /* Ova izmjena lijevo-desno stvara efekt tresenja */
+        }
+
+        /* ============================================
+           EPIC BUTTON - RAINBOW (DUGA) ANIMIRANI OBRUB
+           Najsloženiji gumb - ima animiranu dugu oko sebe
+           ============================================ */
+        .btn-epic {
+            padding: 20px 60px;
+            font-size: 1.5rem;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #333;                   /* Tamni tekst na svijetloj pozadini */
+            background: white;             /* Bijela pozadina gumba */
+            border: 4px solid transparent; /* Prozirni obrub - duga će biti iza njega */
+            border-radius: 10px;
+            cursor: pointer;
+            position: relative;            /* VAŽNO! Omogućuje ::before i ::after pozicioniranje */
+            z-index: 1;                    /* Gumb je iznad pseudo-elemenata */
+        }
+
+        /* ============================================
+           ::BEFORE PSEUDO-ELEMENT - DUGA POZADINA
+           Stvara rainbow gradient IZA gumba
+           ============================================ */
+        .btn-epic::before {
+            content: '';                   /* OBAVEZNO za pseudo-element - može biti prazan */
+            position: absolute;            /* Apsolutno pozicioniranje unutar roditelja */
+
+            /* Pozicioniramo 4px izvan gumba sa svih strana
+               (to je debljina "obruba" duge) */
+            top: -4px;
+            left: -4px;
+            right: -4px;
+            bottom: -4px;
+
+            /* RAINBOW GRADIENT - 9 boja koje se ponavljaju */
+            background: linear-gradient(45deg,
+                #ff0000,    /* Crvena */
+                #ff7300,    /* Narančasta */
+                #fffb00,    /* Žuta */
+                #48ff00,    /* Zelena */
+                #00ffd5,    /* Tirkizna */
+                #002bff,    /* Plava */
+                #7a00ff,    /* Ljubičasta */
+                #ff00c8,    /* Magenta */
+                #ff0000     /* Opet crvena - za glatki prijelaz */
+            );
+
+            /* background-size: 400% čini gradient 4x širi od elementa
+               To nam omogućuje da "pomičemo" gradient kroz element */
+            background-size: 400%;
+
+            border-radius: 12px;           /* Malo veći radius jer je element veći */
+            z-index: -1;                   /* IZA gumba ali iznad ::after */
+
+            animation: rainbow 20s linear infinite;
+            /* linear = konstantna brzina (bez ubrzanja/usporenja)
+               20s = sporo, za glatki efekt */
+        }
+
+        /* ============================================
+           ::AFTER PSEUDO-ELEMENT - POZADINA GUMBA
+           Prekriva sredinu duge, ostavljajući samo "obrub"
+           ============================================ */
+        .btn-epic::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;             /* Bijela - prekriva sredinu duge */
+            border-radius: 6px;
+            z-index: -1;                   /* Između gumba i ::before (duge) */
+        }
+
+        /* ============================================
+           @KEYFRAMES RAINBOW - Pomiče gradient poziciju
+           ============================================ */
+        @keyframes rainbow {
+            0% { background-position: 0 0; }       /* Početna pozicija */
+            50% { background-position: 400% 0; }   /* Pomiče se za 400% (cijeli gradient) */
+            100% { background-position: 0 0; }     /* Vraća se na početak */
+            /* Ovaj krug stvara beskonačno "protjecanje" boja */
+        }
+
+        h1 {
+            color: #333;                   /* Tamni tekst */
+            margin-bottom: 20px;
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN - Prilagodba za manje ekrane
+           ============================================ */
+        @media (max-width: 600px) {
+            .btn-play,
+            .btn-danger,
+            .btn-epic {
+                padding: 15px 40px;        /* Manji gumbi na mobitelima */
+                font-size: 1.2rem;
+            }
+            body {
+                gap: 20px;                 /* Manji razmak između gumbova */
+                padding: 20px;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Poštivanje korisničkih postavki
+           Neki korisnici preferiraju smanjene animacije
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .btn-play {
+                animation: none;
+            }
+            .btn-danger:hover {
+                animation: none;
+            }
+            .btn-epic::before {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Gaming Style Buttons</h1>
+
+    <!-- Pulse gumb - ima pulsiranje oko sebe -->
+    <button class="btn-play">PLAY NOW</button>
+
+    <!-- Danger gumb - trese se na hover -->
+    <button class="btn-danger">DELETE SAVE</button>
+
+    <!-- Epic gumb - ima animiranu dugu oko sebe -->
+    <button class="btn-epic">LEGENDARY ITEM</button>
+</body>
+</html>

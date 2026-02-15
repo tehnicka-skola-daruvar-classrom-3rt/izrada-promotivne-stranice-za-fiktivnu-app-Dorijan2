@@ -1,0 +1,322 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Ikone</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE
+           ============================================ */
+        body {
+            background: linear-gradient(135deg, #e8f4f8, #f0f4f8, #e8e8f8);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            font-family: Arial, sans-serif;
+            padding: 40px 20px;
+        }
+
+        h2 {
+            color: #1e293b;
+            margin-bottom: -30px;          /* Negativna margina primiče naslov bliže ikonama */
+            text-shadow: none;
+        }
+
+        /* ============================================
+           VERZIJA 1 - FILL EFEKT ODOZDO
+           Boja "puni" ikonu od dna prema vrhu
+           ============================================ */
+        .social-icons-v1 {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icons-v1 a {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #fff;
+            background: #64748b;           /* Svijetlo siva pozadina kao baza */
+            border-radius: 50%;            /* Krug */
+            position: relative;            /* Za ::before pseudo-element */
+            overflow: hidden;              /* KLJUČNO! Skriva ::before kad izlazi izvan kruga */
+            text-decoration: none;         /* Uklanja podvlačenje linka */
+            transition: color 0.3s ease;
+            z-index: 1;                    /* Tekst iznad ::before */
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ::before stvara "ispunu" koja raste od dna */
+        .social-icons-v1 a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;                     /* Počinje na dnu */
+            left: 0;
+            width: 100%;
+            height: 0;                     /* Počinje s visinom 0 - nevidljivo */
+            transition: height 0.3s ease;  /* Glatko povećanje visine */
+            z-index: -1;                   /* Iza teksta/ikone */
+            border-radius: 50%;
+        }
+
+        /* Na hover, ::before naraste na punu visinu */
+        .social-icons-v1 a:hover::before {
+            height: 100%;
+        }
+
+        /* Svaka mreža ima svoju boju za ::before */
+        .social-icons-v1 a.facebook::before { background: #1877f2; }
+        .social-icons-v1 a.instagram::before { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-icons-v1 a.twitter::before { background: #1da1f2; }
+        .social-icons-v1 a.youtube::before { background: #ff0000; }
+        .social-icons-v1 a.tiktok::before { background: #000; }
+
+        /* Dodatni hover efekt - ikona se podigne */
+        .social-icons-v1 a:hover {
+            transform: translateY(-5px);   /* Podigne se za 5px */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);  /* Sjena za dubinu */
+        }
+
+        /* ============================================
+           VERZIJA 2 - ROTATE + SCALE
+           Ikona se rotira i poveća na hover
+           ============================================ */
+        .social-icons-v2 {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icons-v2 a {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #fff;
+            border-radius: 15px;           /* Zaobljeni kvadrat */
+            text-decoration: none;
+
+            /* transition: all omogućuje animaciju SVIH svojstava */
+            transition: all 0.4s ease;
+        }
+
+        /* Boje za svaku mrežu */
+        .social-icons-v2 a.facebook { background: #1877f2; }
+        .social-icons-v2 a.instagram { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); }
+        .social-icons-v2 a.twitter { background: #1da1f2; }
+        .social-icons-v2 a.youtube { background: #ff0000; }
+        .social-icons-v2 a.discord { background: #5865f2; }
+
+        .social-icons-v2 a:hover {
+            /* KOMBINACIJA TRANSFORMACIJA u jednom svojstvu! */
+            transform: rotate(360deg) scale(1.2);
+            /* rotate(360deg) = puna rotacija
+               scale(1.2) = povećanje za 20% */
+
+            border-radius: 50%;            /* Iz kvadrata postaje krug */
+
+            /* currentColor koristi trenutnu boju teksta (color: #fff)
+               ali box-shadow ga koristi za sjaj - efekt "glow" */
+            box-shadow: 0 0 30px currentColor;
+        }
+
+        /* ============================================
+           VERZIJA 3 - TOOLTIP EFEKT
+           Ime mreže se pojavi ispod ikone na hover
+           ============================================ */
+        .social-icons-v3 {
+            display: flex;
+            gap: 20px;
+        }
+
+        .social-icons-v3 a {
+            width: 60px;
+            height: 60px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.5rem;
+            color: #fff;
+            background: #64748b;
+            border-radius: 50%;
+            text-decoration: none;
+            position: relative;            /* Za ::after tooltip */
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+        }
+
+        /* ::after stvara tooltip koji se pojavi na hover */
+        .social-icons-v3 a::after {
+            /* ATTR() funkcija čita vrijednost HTML atributa!
+               data-name="Facebook" u HTML-u -> content prikazuje "Facebook" */
+            content: attr(data-name);
+
+            position: absolute;
+            bottom: -40px;                 /* Ispod ikone */
+            background: #fff;
+            color: #333;
+            padding: 5px 15px;
+            border-radius: 5px;
+            font-size: 0.8rem;
+            font-weight: bold;
+
+            opacity: 0;                    /* Nevidljivo na početku */
+            transform: translateY(-10px);  /* Malo gore od krajnje pozicije */
+            transition: all 0.3s ease;
+            white-space: nowrap;           /* Sprječava prelom teksta */
+        }
+
+        /* Na hover tooltip postaje vidljiv i pada na mjesto */
+        .social-icons-v3 a:hover::after {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ikona se podigne na hover */
+        .social-icons-v3 a:hover {
+            transform: translateY(-10px);
+        }
+
+        /* Svaka mreža ima svoju boju pozadine i sjaja na hover */
+        .social-icons-v3 a.facebook:hover { background: #1877f2; box-shadow: 0 10px 30px #1877f2; }
+        .social-icons-v3 a.instagram:hover { background: linear-gradient(45deg, #f09433, #dc2743); box-shadow: 0 10px 30px #dc2743; }
+        .social-icons-v3 a.twitter:hover { background: #1da1f2; box-shadow: 0 10px 30px #1da1f2; }
+        .social-icons-v3 a.github:hover { background: #333; box-shadow: 0 10px 30px #666; }
+        .social-icons-v3 a.linkedin:hover { background: #0077b5; box-shadow: 0 10px 30px #0077b5; }
+
+        /* ============================================
+           VERZIJA 4 - BOUNCE EFEKT NA HOVER
+           Ikona "poskakuje" kad prijeđeš mišem
+           ============================================ */
+        .social-icons-v4 {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons-v4 a {
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.3rem;
+            color: #fff;
+            border-radius: 10px;
+            text-decoration: none;
+        }
+
+        /* Boje za svaku mrežu */
+        .social-icons-v4 a.facebook { background: #1877f2; }
+        .social-icons-v4 a.instagram { background: linear-gradient(45deg, #f09433, #dc2743); }
+        .social-icons-v4 a.twitter { background: #1da1f2; }
+        .social-icons-v4 a.youtube { background: #ff0000; }
+        .social-icons-v4 a.twitch { background: #9146ff; }
+
+        /* Animacija se pokreće SAMO na hover (ne infinite) */
+        .social-icons-v4 a:hover {
+            animation: bounce 0.5s ease;
+        }
+
+        /* ============================================
+           @KEYFRAMES BOUNCE - Skakutanje gore-dolje
+           ============================================ */
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }      /* Početak i kraj - normalno */
+            25% { transform: translateY(-15px); }       /* Prvi skok gore */
+            50% { transform: translateY(-5px); }        /* Malo pada */
+            75% { transform: translateY(-10px); }       /* Manji skok */
+            /*
+               Timing stvara efekt "odbijanja" kao loptica.
+               Svaki sljedeći skok je manji od prethodnog.
+            */
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 600px) {
+            body {
+                gap: 40px;
+                padding: 30px 20px;
+            }
+            h2 {
+                font-size: 1.2rem;
+            }
+            .social-icons-v1 a,
+            .social-icons-v2 a,
+            .social-icons-v3 a,
+            .social-icons-v4 a {
+                width: 50px;
+                height: 50px;
+                font-size: 1.2rem;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .social-icons-v1 a,
+            .social-icons-v1 a::before,
+            .social-icons-v2 a,
+            .social-icons-v3 a,
+            .social-icons-v3 a::after,
+            .social-icons-v4 a:hover {
+                animation: none;
+                transition: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- VERZIJA 1: Fill efekt odozdo -->
+    <h2>Fill Effect</h2>
+    <div class="social-icons-v1">
+        <!-- Klasa određuje koja boja će se koristiti -->
+        <a href="#" class="facebook">f</a>
+        <a href="#" class="instagram">&#128247;</a>   <!-- 📷 kamera za Instagram -->
+        <a href="#" class="twitter">&#120143;</a>      <!-- 𝕏 X logo -->
+        <a href="#" class="youtube">&#9658;</a>        <!-- ▶ play ikona za YouTube -->
+        <a href="#" class="tiktok">&#9835;</a>         <!-- ♫ nota za TikTok -->
+    </div>
+
+    <!-- VERZIJA 2: Rotate + Scale -->
+    <h2>Rotate + Scale</h2>
+    <div class="social-icons-v2">
+        <a href="#" class="facebook">f</a>
+        <a href="#" class="instagram">&#128247;</a>   <!-- 📷 kamera -->
+        <a href="#" class="twitter">&#120143;</a>      <!-- 𝕏 -->
+        <a href="#" class="youtube">&#9658;</a>        <!-- ▶ -->
+        <a href="#" class="discord">&#127918;</a>      <!-- 🎮 gamepad za Discord -->
+    </div>
+
+    <!-- VERZIJA 3: Tooltip s data-name atributom -->
+    <h2>Tooltip Effect</h2>
+    <div class="social-icons-v3">
+        <!-- data-name atribut se koristi za tooltip tekst putem attr() funkcije -->
+        <a href="#" class="facebook" data-name="Facebook">f</a>
+        <a href="#" class="instagram" data-name="Instagram">&#128247;</a>  <!-- 📷 -->
+        <a href="#" class="twitter" data-name="Twitter/X">&#120143;</a>     <!-- 𝕏 -->
+        <a href="#" class="github" data-name="GitHub">&#128025;</a>         <!-- 🐙 hobotnica za GitHub -->
+        <a href="#" class="linkedin" data-name="LinkedIn">in</a>
+    </div>
+
+    <!-- VERZIJA 4: Bounce efekt -->
+    <h2>Bounce Effect</h2>
+    <div class="social-icons-v4">
+        <a href="#" class="facebook">f</a>
+        <a href="#" class="instagram">&#128247;</a>   <!-- 📷 -->
+        <a href="#" class="twitter">&#120143;</a>      <!-- 𝕏 -->
+        <a href="#" class="youtube">&#9658;</a>        <!-- ▶ -->
+        <a href="#" class="twitch">&#128250;</a>       <!-- 📺 TV za Twitch -->
+    </div>
+</body>
+</html>

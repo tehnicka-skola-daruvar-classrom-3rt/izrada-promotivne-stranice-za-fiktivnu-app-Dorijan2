@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Typing Efekt</title>
+    <style>
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE - SVIJETLA TEMA
+           ============================================ */
+        body {
+            background: #f0f4f8;           /* Svijetla pozadina */
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 60px;
+            font-family: 'Courier New', monospace;  /* Monospace font = sva slova iste širine (kao u terminalu) */
+        }
+
+        /* ============================================
+           TYPING EFEKT - Simulira pisanje na tipkovnici
+           ============================================ */
+        .typing {
+            font-size: 2.5rem;
+            color: #1a73e8;                /* Plava boja - vidljiva na svijetloj pozadini */
+
+            overflow: hidden;              /* Skriva tekst koji još nije "otipkan" */
+            white-space: nowrap;           /* Sprječava prelom teksta u novi red */
+
+            /* Border-right stvara CURSOR (trepćuću liniju) */
+            border-right: 4px solid #1a73e8;
+
+            width: 0;                      /* Počinje s širinom 0 - ništa nije vidljivo */
+
+            /* DVIJE ANIMACIJE ISTOVREMENO!
+               Razdvojene zarezom, izvršavaju se paralelno */
+            animation:
+                typing 3.5s steps(25, end) forwards,
+                blink 0.75s step-end infinite;
+            /*
+               typing:
+               - 3.5s = ukupno trajanje
+               - steps(25, end) = JAKO VAŽNO! Animacija ima 25 koraka (ne glatki prijelaz)
+                 To simulira da se svako slovo pojavi odjednom, ne postepeno
+                 25 = broj slova u tekstu "Dobrodošli u CSS animacije!"
+               - forwards = zadržava krajnje stanje (ne vraća se na width: 0)
+
+               blink:
+               - 0.75s = brzina treptanja cursora
+               - step-end = cursor je ili vidljiv ili nevidljiv, bez prijelaza
+               - infinite = treperi zauvijek
+            */
+        }
+
+        /* ============================================
+           @KEYFRAMES TYPING - Širina se povećava korak po korak
+           ============================================ */
+        @keyframes typing {
+            from { width: 0; }             /* Počinje nevidljivo */
+            to { width: 100%; }            /* Završava punom širinom */
+            /*
+               Uz steps(25, end), ova animacija ne ide glatko od 0 do 100%.
+               Umjesto toga, ide: 0% -> 4% -> 8% -> 12% ... -> 100%
+               u 25 diskretnih koraka, svaki "otkriva" jedno slovo.
+            */
+        }
+
+        /* ============================================
+           @KEYFRAMES BLINK - Treptanje cursora
+           ============================================ */
+        @keyframes blink {
+            from, to { border-color: transparent; }  /* Nevidljiv */
+            50% { border-color: #1a73e8; }           /* Vidljiv na sredini */
+            /*
+               step-end u animation svojstvu čini da promjene budu trenutne,
+               bez glatkog prijelaza. Cursor je ili tu ili nije.
+            */
+        }
+
+        .typing-container {
+            display: flex;
+            width: fit-content;            /* Širina se prilagođava sadržaju */
+            background: white;
+            padding: 30px 40px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        /* ============================================
+           HACKER TERMINAL - Sekvencijalno pojavljivanje redaka
+           ============================================ */
+        .hacker-terminal {
+            background: #1e293b;           /* Tamna pozadina samo za terminal */
+            border: 2px solid #3b82f6;
+            border-radius: 10px;
+            padding: 30px;
+            width: 100%;
+            max-width: 600px;              /* max-width umjesto fiksne širine za responzivnost */
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        /* Gumbi terminala (crveni, žuti, zeleni) */
+        .terminal-header {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;            /* Krug */
+        }
+
+        /* nth-child za različite boje svakog gumba */
+        .terminal-dot:nth-child(1) { background: #ef4444; }  /* Crveni (zatvori) */
+        .terminal-dot:nth-child(2) { background: #f59e0b; }  /* Žuti (minimiziraj) */
+        .terminal-dot:nth-child(3) { background: #22c55e; }  /* Zeleni (maksimiziraj) */
+
+        .terminal-content {
+            color: #22c55e;                /* Zelena boja teksta */
+            font-size: 1rem;
+        }
+
+        .terminal-line {
+            overflow: hidden;
+            white-space: nowrap;
+            opacity: 0;                    /* Počinje nevidljivo */
+            animation: fadeIn 0.5s forwards;  /* Postupno se pojavljuje */
+        }
+
+        /* SEKVENCIJALNO POJAVLJIVANJE - Svaki red ima veći delay */
+        .terminal-line:nth-child(1) { animation-delay: 0s; }
+        .terminal-line:nth-child(2) { animation-delay: 1s; }
+        .terminal-line:nth-child(3) { animation-delay: 2s; }
+        .terminal-line:nth-child(4) { animation-delay: 3s; }
+        .terminal-line:nth-child(5) { animation-delay: 4s; }
+        .terminal-line:nth-child(6) { animation-delay: 5s; }
+        /*
+           Svaki redak čeka 1s duže od prethodnog.
+           Red 1 se pojavi odmah (0s), red 2 nakon 1s, red 3 nakon 2s...
+           Stvara efekt kao da se redci "ispisuju" jedan po jedan.
+        */
+
+        /* ============================================
+           @KEYFRAMES FADEIN - Jednostavno pojavljivanje
+           ============================================ */
+        @keyframes fadeIn {
+            from { opacity: 0; }           /* Početno stanje - nevidljivo */
+            to { opacity: 1; }             /* Krajnje stanje - potpuno vidljivo */
+        }
+
+        .terminal-line span {
+            color: #60a5fa;                /* Svijetlo plava boja za $ prompt */
+        }
+
+        /* Animirani cursor na kraju terminala */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;                 /* em = relativna jedinica, 1.2x visina fonta */
+            background: #22c55e;
+            animation: blink-green 0.75s step-end infinite;
+            vertical-align: text-bottom;   /* Poravnanje s dnom teksta */
+        }
+
+        @keyframes blink-green {
+            from, to { opacity: 0; }
+            50% { opacity: 1; }
+        }
+
+        /* ============================================
+           GLITCH TEKST - Kaotični "hakiran" efekt
+           Koristi pseudo-elemente za stvaranje kopija teksta
+           ============================================ */
+        .glitch-container {
+            background: white;
+            padding: 40px 60px;
+            border-radius: 15px;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+
+        .glitch {
+            font-size: 4rem;
+            font-weight: bold;
+            color: #1e293b;                /* Tamna boja teksta */
+            position: relative;            /* Za pozicioniranje ::before i ::after */
+        }
+
+        /* ::before i ::after stvaraju dvije "kopije" teksta */
+        .glitch::before,
+        .glitch::after {
+            /* VAŽNO: content mora biti RUČNO upisan!
+               CSS ne može automatski pročitati tekst iz HTML-a.
+               Ako promijenite tekst u HTML-u, morate ga promijeniti i ovdje! */
+            content: 'HACK THE SYSTEM';
+            position: absolute;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+        }
+
+        /* Prva kopija - crvena, prikazuje samo gornji dio */
+        .glitch::before {
+            color: #ef4444;                /* Crvena */
+            animation: glitch-1 2s infinite linear alternate-reverse;
+
+            /* CLIP-PATH - Prikazuje samo dio elementa!
+               polygon definira oblik koji ostaje vidljiv
+               (0 0) = gornji lijevi kut
+               (100% 0) = gornji desni
+               (100% 35%) = 35% od vrha, desno
+               (0 35%) = 35% od vrha, lijevo
+               Rezultat: vidljivo je samo gornjih 35% teksta */
+            clip-path: polygon(0 0, 100% 0, 100% 35%, 0 35%);
+        }
+
+        /* Druga kopija - plava, prikazuje samo donji dio */
+        .glitch::after {
+            color: #3b82f6;                /* Plava */
+            animation: glitch-2 3s infinite linear alternate-reverse;
+
+            /* Prikazuje donji dio teksta (od 65% do 100%) */
+            clip-path: polygon(0 65%, 100% 65%, 100% 100%, 0 100%);
+        }
+
+        /* ============================================
+           @KEYFRAMES GLITCH - Pomicanje kopija teksta
+           Svaka kopija se pomiče drugačije, stvarajući kaos
+           ============================================ */
+        @keyframes glitch-1 {
+            0% { transform: translate(0); }
+            20% { transform: translate(-3px, 3px); }    /* Pomak gore-lijevo */
+            40% { transform: translate(-3px, -3px); }   /* Pomak dolje-lijevo */
+            60% { transform: translate(3px, 3px); }     /* Pomak gore-desno */
+            80% { transform: translate(3px, -3px); }    /* Pomak dolje-desno */
+            100% { transform: translate(0); }
+        }
+
+        @keyframes glitch-2 {
+            0% { transform: translate(0); }
+            20% { transform: translate(3px, -3px); }    /* Suprotni pomaci od glitch-1 */
+            40% { transform: translate(3px, 3px); }
+            60% { transform: translate(-3px, -3px); }
+            80% { transform: translate(-3px, 3px); }
+            100% { transform: translate(0); }
+        }
+        /*
+           Dvije kopije se pomiču u različitim smjerovima i brzinama
+           (2s vs 3s), što stvara kaotični "glitch" efekt.
+           Originalni tamni tekst ostaje na mjestu kao "sidro".
+        */
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 768px) {
+            .typing {
+                font-size: 1.5rem;         /* Manji font na mobilnim */
+            }
+            .glitch {
+                font-size: 2rem;
+            }
+            .typing-container,
+            .glitch-container {
+                margin: 0 20px;
+                padding: 20px;
+            }
+            .hacker-terminal {
+                margin: 0 20px;
+            }
+            body {
+                gap: 40px;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .typing {
+                animation: none;
+                width: 100%;               /* Odmah prikaži cijeli tekst */
+                border-right: none;
+            }
+            .terminal-line {
+                animation: none;
+                opacity: 1;                /* Odmah prikaži sve redove */
+            }
+            .cursor {
+                animation: none;
+                opacity: 1;
+            }
+            .glitch::before,
+            .glitch::after {
+                animation: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Jednostavan typing efekt - tekst se "tipka" -->
+    <div class="typing-container">
+        <div class="typing">Dobrodošli u CSS animacije!</div>
+    </div>
+
+    <!-- Terminal stil - redci se pojavljuju sekvencijalno -->
+    <div class="hacker-terminal">
+        <div class="terminal-header">
+            <div class="terminal-dot"></div>  <!-- nth-child(1) = crveni -->
+            <div class="terminal-dot"></div>  <!-- nth-child(2) = žuti -->
+            <div class="terminal-dot"></div>  <!-- nth-child(3) = zeleni -->
+        </div>
+        <div class="terminal-content">
+            <!-- Svaki red ima različiti animation-delay -->
+            <div class="terminal-line"><span>$</span> Inicijalizacija sustava...</div>       <!-- delay: 0s -->
+            <div class="terminal-line"><span>$</span> Učitavanje modula... OK</div>          <!-- delay: 1s -->
+            <div class="terminal-line"><span>$</span> Povezivanje na server... OK</div>      <!-- delay: 2s -->
+            <div class="terminal-line"><span>$</span> Dohvaćanje podataka...</div>           <!-- delay: 3s -->
+            <div class="terminal-line"><span>$</span> STATUS: <span style="color: #22c55e;">CONNECTED</span></div>  <!-- delay: 4s -->
+            <div class="terminal-line"><span>$</span> <span class="cursor"></span></div>     <!-- delay: 5s -->
+        </div>
+    </div>
+
+    <!-- Glitch tekst - kaotični efekt s ::before i ::after -->
+    <div class="glitch-container">
+        <div class="glitch">HACK THE SYSTEM</div>
+    </div>
+</body>
+</html>

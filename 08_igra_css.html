@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="hr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CSS Mini Igra - Uhvati Metu!</title>
+    <style>
+        /* ============================================
+           CSS RESET
+           ============================================ */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* ============================================
+           OSNOVNA POSTAVKA STRANICE
+           ============================================ */
+        body {
+            /* Svijetli gradijent - vidljivo na projektoru */
+            background: linear-gradient(135deg, #e8f4f8, #f0f4f8, #e8e8f8);
+            min-height: 100vh;
+            font-family: Arial, sans-serif;
+            overflow: hidden;              /* Sprječava scroll */
+        }
+
+        .game-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+
+        h1 {
+            color: #1e293b;
+            margin-bottom: 10px;
+            text-shadow: none;
+        }
+
+        .instructions {
+            color: #64748b;
+            margin-bottom: 30px;
+        }
+
+        /* ============================================
+           PODRUČJE IGRE
+           ============================================ */
+        .game-area {
+            width: 100%;
+            height: 400px;
+            background: white;
+            border: 3px solid #1a73e8;
+            border-radius: 20px;
+            position: relative;            /* Za apsolutno pozicionirane mete */
+            overflow: hidden;              /* Mete ne izlaze izvan okvira */
+            box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+        }
+
+        /* ============================================
+           ZAJEDNIČKI STILOVI ZA SVE METE
+           ============================================ */
+        .target {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;            /* Krug */
+            position: absolute;            /* Može biti bilo gdje unutar game-area */
+            cursor: pointer;
+
+            /* transition za hover efekt (nestajanje) */
+            transition: transform 0.1s, opacity 0.3s;
+        }
+
+        /* HOVER EFEKT - Meta "nestaje" kad prijeđeš mišem */
+        .target:hover {
+            transform: scale(0);           /* Smanji na 0 = nevidljivo */
+            opacity: 0;
+        }
+
+        /* ============================================
+           META 1 - HORIZONTALNO KRETANJE
+           Pomiče se lijevo-desno
+           ============================================ */
+        .target-1 {
+            /* radial-gradient stvara efekt "sjene" - svjetlije u sredini */
+            background: radial-gradient(circle, #ff416c, #ff4b2b);
+            top: 50px;                     /* Fiksna vertikalna pozicija */
+
+            animation: moveHorizontal 3s ease-in-out infinite alternate;
+            /* alternate = ide naprijed pa nazad */
+
+            box-shadow: 0 0 20px #ff416c;  /* Neon glow */
+        }
+
+        @keyframes moveHorizontal {
+            from { left: 20px; }                    /* Počinje lijevo */
+            to { left: calc(100% - 70px); }         /* Završava desno */
+            /*
+               calc(100% - 70px) računa:
+               100% = puna širina roditelja (game-area)
+               -70px = širina mete (50px) + razmak (20px)
+               To osigurava da meta ne izlazi izvan okvira.
+            */
+        }
+
+        /* ============================================
+           META 2 - VERTIKALNO KRETANJE
+           Pomiče se gore-dolje
+           ============================================ */
+        .target-2 {
+            background: radial-gradient(circle, #00d4ff, #0099ff);
+            left: 100px;                   /* Fiksna horizontalna pozicija */
+            animation: moveVertical 2s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px #00d4ff;
+        }
+
+        @keyframes moveVertical {
+            from { top: 20px; }
+            to { top: calc(100% - 70px); }
+        }
+
+        /* ============================================
+           META 3 - DIJAGONALNO KRETANJE
+           Pomiče se dijagonalno kroz područje
+           ============================================ */
+        .target-3 {
+            background: radial-gradient(circle, #7a00ff, #ff00c8);
+            animation: moveDiagonal 4s ease-in-out infinite alternate;
+            box-shadow: 0 0 20px #7a00ff;
+        }
+
+        @keyframes moveDiagonal {
+            /* Tri točke definiraju putanju */
+            0% { top: 20px; left: 200px; }           /* Gornji dio */
+            50% { top: 150px; left: calc(100% - 70px); }  /* Sredina, desno */
+            100% { top: calc(100% - 70px); left: 300px; } /* Donji dio */
+            /*
+               Meta se kreće cik-cak: gore-lijevo -> sredina-desno -> dolje-lijevo
+            */
+        }
+
+        /* ============================================
+           META 4 - BOUNCE (GRAVITACIJA)
+           Simulira odskakujuću loptu
+           ============================================ */
+        .target-4 {
+            background: radial-gradient(circle, #27ca40, #11998e);
+            left: 400px;
+            animation: bounce 1s ease-in-out infinite;  /* Bez alternate - konstantno */
+            box-shadow: 0 0 20px #27ca40;
+        }
+
+        @keyframes bounce {
+            0%, 100% { top: calc(100% - 70px); }    /* Na dnu */
+            50% { top: 50px; }                       /* Na vrhu */
+            /*
+               ease-in-out timing funkcija stvara efekt usporenja
+               na vrhu (kao prava gravitacija) i ubrzanja prema dnu.
+            */
+        }
+
+        /* ============================================
+           META 5 - KRUŽNO KRETANJE
+           Vrti se u krug oko središta
+           ============================================ */
+        .target-5 {
+            background: radial-gradient(circle, #feca57, #ff9f43);
+            animation: circular 5s linear infinite;  /* linear = konstantna brzina */
+            box-shadow: 0 0 20px #feca57;
+        }
+
+        @keyframes circular {
+            0% {
+                top: 175px;                /* Vertikalni centar (400px/2 - 25px) */
+                left: 50%;
+                /*
+                   TRIK ZA KRUŽNO KRETANJE:
+                   1. translateX(-50%) centrira element
+                   2. rotate(0deg) je početni kut
+                   3. translateX(100px) pomiče element 100px od centra
+
+                   Kad se rotate mijenja, element se "vrti" oko točke
+                   definirane prvim translateX, na udaljenosti drugog translateX.
+                */
+                transform: translateX(-50%) rotate(0deg) translateX(100px);
+            }
+            100% {
+                top: 175px;
+                left: 50%;
+                transform: translateX(-50%) rotate(360deg) translateX(100px);
+            }
+        }
+
+        /* ============================================
+           META 6 - TELEPORTACIJA
+           Instant "skakanje" između pozicija
+           ============================================ */
+        .target-6 {
+            background: radial-gradient(circle, #ee5a24, #ea2027);
+            width: 40px;                   /* Malo manja - teža za pogoditi */
+            height: 40px;
+
+            animation: teleport 2s steps(1) infinite;
+            /*
+               STEPS(1) = KLJUČNO!
+               Umjesto glatkog prijelaza, animacija ima samo 1 korak
+               između svakog keyframe-a. To znači INSTANT promjenu pozicije.
+
+               steps(1) = svaki keyframe je direktni skok, bez animacije između.
+            */
+
+            box-shadow: 0 0 20px #ee5a24;
+        }
+
+        @keyframes teleport {
+            /* Svaka pozicija se pojavi instant, bez prijelaza */
+            0% { top: 100px; left: 100px; opacity: 1; }
+            25% { top: 200px; left: 500px; opacity: 1; }   /* Teleport! */
+            50% { top: 50px; left: 300px; opacity: 1; }    /* Teleport! */
+            75% { top: 300px; left: 200px; opacity: 1; }   /* Teleport! */
+            100% { top: 100px; left: 100px; opacity: 1; }  /* Natrag na početak */
+        }
+
+        /* ============================================
+           PRIKAZ REZULTATA
+           ============================================ */
+        .score {
+            color: #1a73e8;
+            font-size: 1.5rem;
+            margin-top: 20px;
+        }
+
+        .score span {
+            color: #1e293b;
+            font-weight: bold;
+        }
+
+        /* ============================================
+           CHECKBOX HACK - CSS-ONLY INTERAKCIJA
+           Omogućuje "klikanje" bez JavaScripta
+           ============================================ */
+        input[type="checkbox"] {
+            display: none;                 /* Sakrivamo checkbox */
+        }
+
+        /* Kad je checkbox označen, label (meta) nestaje */
+        input[type="checkbox"]:checked + .target {
+            display: none;
+        }
+        /*
+           KAKO RADI:
+           HTML: <input type="checkbox" id="t1"><label for="t1" class="target">
+
+           1. Klik na label automatski označava checkbox (HTML ponašanje)
+           2. CSS selektor input:checked + .target cilja label ODMAH NAKON
+              označenog checkboxa (+ je "adjacent sibling" selektor)
+           3. display: none sakriva metu
+
+           Rezultat: Klik na metu = checkbox se označi = meta nestane
+           SVE BEZ JAVASCRIPTA!
+        */
+
+        .tip {
+            color: #64748b;
+            margin-top: 20px;
+            font-size: 0.9rem;
+        }
+
+        /* ============================================
+           CODE HINT - Objašnjenje animacija
+           ============================================ */
+        .code-hint {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 20px;
+            text-align: left;
+            color: #1e293b;
+            font-family: monospace;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border: 1px solid #e2e8f0;
+        }
+
+        .code-hint h3 {
+            color: #1a73e8;
+            margin-bottom: 10px;
+        }
+
+        /* ============================================
+           RESPONZIVNI DIZAJN
+           ============================================ */
+        @media (max-width: 600px) {
+            .game-container {
+                padding: 15px;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+            .game-area {
+                height: 300px;
+            }
+            .target {
+                width: 40px;
+                height: 40px;
+            }
+            .code-hint {
+                font-size: 0.8rem;
+            }
+        }
+
+        /* ============================================
+           PRISTUPAČNOST - Za korisnike osjetljive na pokret
+           Igra zahtijeva animacije pa prikazujemo obavijest
+           ============================================ */
+        @media (prefers-reduced-motion: reduce) {
+            .target {
+                animation: none !important;
+                /* Fiksne pozicije za mete kad su animacije isključene */
+            }
+            .target-1 { left: 20px; top: 50px; }
+            .target-2 { left: 100px; top: 150px; }
+            .target-3 { left: 250px; top: 100px; }
+            .target-4 { left: 400px; top: 250px; }
+            .target-5 { left: 350px; top: 175px; }
+            .target-6 { left: 200px; top: 280px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1>&#127919; Uhvati Mete!</h1>  <!-- 🎯 -->
+        <p class="instructions">Klikni na mete da ih ukloniš! Svaka meta ima drugačiju animaciju.</p>
+
+        <div class="game-area">
+            <!--
+                STRUKTURA ZA SVAKU METU:
+                1. input type="checkbox" - skriven, ali funkcionalan
+                2. label for="..." - vizualna meta, klikom na nju aktivira checkbox
+
+                input i label MORAJU biti adjacent siblings (jedan do drugog u HTML-u)
+                da bi + selektor u CSS-u radio!
+            -->
+            <input type="checkbox" id="t1"><label for="t1" class="target target-1"></label>
+            <input type="checkbox" id="t2"><label for="t2" class="target target-2"></label>
+            <input type="checkbox" id="t3"><label for="t3" class="target target-3"></label>
+            <input type="checkbox" id="t4"><label for="t4" class="target target-4"></label>
+            <input type="checkbox" id="t5"><label for="t5" class="target target-5"></label>
+            <input type="checkbox" id="t6"><label for="t6" class="target target-6"></label>
+        </div>
+
+        <p class="tip">&#128161; Ova "igra" koristi samo CSS! Hover efekt smanjuje metu, checkbox hack ju skriva.</p>
+
+        <div class="code-hint">
+            <h3>Animacije korištene u igri:</h3>
+            <p>1. moveHorizontal - left: 20px do left: calc(100% - 70px)</p>
+            <p>2. moveVertical - top vrijednosti</p>
+            <p>3. moveDiagonal - kombinacija top i left</p>
+            <p>4. bounce - gravitacijski efekt</p>
+            <p>5. circular - rotate + translateX za kružno kretanje</p>
+            <p>6. teleport - steps(1) za instant promjene pozicije</p>
+        </div>
+    </div>
+</body>
+</html>
